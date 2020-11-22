@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resources/card-definitions.json</file>
+        <file>resources/sample-deck.json</file>
+    </qresource>
+</RCC>

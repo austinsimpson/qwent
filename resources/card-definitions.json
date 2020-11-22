@@ -1,0 +1,102 @@
+{
+    "cards": [
+        {
+            "name": "Austin",
+            "attackPower": 15,
+            "isLegendary": true,
+            "specialEffect": 0,
+            "fieldPosition": 0
+        },
+        {
+            "name": "Robby",
+            "attackPower": 15,
+            "isLegendary": true,
+            "specialEffect": 0,
+            "fieldPosition": 1
+        },
+        {
+            "name": "Josh",
+            "attackPower": 15,
+            "isLegendary": true,
+            "specialEffect": 0,
+            "fieldPosition": 2
+        },
+        {
+            "name": "PFI",
+            "attackPower": 1,
+            "isLegendary": false,
+            "specialEffect": 0,
+            "fieldPosition": 0
+        },
+        {
+            "name": "Archer",
+            "attackPower": 5,
+            "isLegendary": false,
+            "specialEffect": 0,
+            "fieldPosition": 1
+        },
+        {
+            "name": "Catapult",
+            "attackPower": 5,
+            "isLegendary": false,
+            "specialEffect": 0,
+            "fieldPosition": 2
+        },
+        {
+            "name": "Trebuchet",
+            "attackPower": 5,
+            "isLegendary": false,
+            "specialEffect": 0,
+            "fieldPosition": 2
+        },
+        {
+            "name": "Spy",
+            "attackPower": 3,
+            "isLegendary": false,
+            "specialEffect": 5,
+            "fieldPosition": 0
+        },
+        {
+            "name": "Fog",
+            "attackPower": 0,
+            "isLegendary": false,
+            "specialEffect": 6,
+            "fieldPosition": 1
+        },
+        {
+            "name": "Rain",
+            "attackPower": 0,
+            "isLegendary": false,
+            "specialEffect": 6,
+            "fieldPosition": 2
+        },
+        {
+            "name": "Blizzard",
+            "attackPower": 0,
+            "isLegendary": false,
+            "specialEffect": 6,
+            "fieldPosition": 0
+        },
+        {
+            "name": "Clear Weather",
+            "attackPower": 0,
+            "isLegendary": false,
+            "specialEffect": 7,
+            "fieldPosition": 3
+        },
+        {
+            "name": "War Horn",
+            "attackPower": 0,
+            "isLegendary": false,
+            "specialEffect": 1,
+            "fieldPosition": 3
+        },
+        {
+            "name": "The Boys",
+            "attackPower": 5,
+            "isLegendary": false,
+            "specialEffect": 2,
+            "fieldPosition": 0
+        }
+    ]
+}
