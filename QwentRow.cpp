@@ -28,13 +28,17 @@ void QwentRow::addCard
 
 	switch (card.data()->specialEffect())
 	{
-	case Card::SpecialEffect::ClearDemoralize:
-		assert(isDemoralized());
-		_cards.removeAt(demoralizingCardIndex);
+	case Card::SpecialEffect::ClearDemoralize:	
+		if (0 <= demoralizingCardIndex && demoralizingCardIndex < _cards.size())
+		{
+			_cards.removeAt(demoralizingCardIndex);
+		}
 		break;
 	case Card::SpecialEffect::Demoralize:
-		assert(isDemoralized() == false);
-		_cards.push_back(card);
+		if (isDemoralized() == false)
+		{
+			_cards.push_back(card);
+		}
 		break;
 	default:
 		_cards.push_back(card);
@@ -110,7 +114,8 @@ unsigned int QwentRow::calculateTotalAttackPower() const
 		case Card::SpecialEffect::DoubleAttackEntireRow:
 			return runningTotal;
 		case Card::SpecialEffect::None:
-			return (demoralized == false || card->isLegendary() ? card->attackPower() : 1u) + runningTotal;
+		case Card::SpecialEffect::Spy:
+			return runningTotal + (demoralized == false || card->isLegendary() ? card->attackPower() : 1u);
 		default:
 			return runningTotal;
 		}

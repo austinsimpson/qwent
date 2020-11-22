@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Card.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="DeckJsonSerializer.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Match.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="QwentGame.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="QwentGameWidget.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="QwentRow.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="QwentWindow.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Card.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="DeckJsonSerializer.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Match.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="QwentGame.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="QwentRow.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="QwentGameWidget.h">
+      <Filter>Headers</Filter>
+    </QtMoc>
+    <QtMoc Include="QwentWindow.h">
+      <Filter>Headers</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="QwentWindow.qrc" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="QwentWindow.ui" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{9f0844af-29e6-46fb-bd06-29554b08d060}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources">
+      <UniqueIdentifier>{f8f2ddd9-5f1e-4d95-a628-9aef8fb778f1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

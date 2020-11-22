@@ -58,9 +58,14 @@ void QwentGame::playCard
 		_players[playerIndex].addCardsToHand(2);
 		break;
 	case Card::SpecialEffect::Demoralize:
-	case Card::SpecialEffect::ClearDemoralize:
 		getRow(playerIndex, fieldPosition).addCard(card);
 		getRow(1 - playerIndex, fieldPosition).addCard(card);
+		break;
+	case Card::SpecialEffect::ClearDemoralize:
+		for (auto& row : _rows)
+		{
+			row.addCard(card);
+		}
 		break;
 	default:
 		getRow(playerIndex, fieldPosition).addCard(card);

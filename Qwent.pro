@@ -1,6 +1,9 @@
 QT += core gui widgets
 TEMPLATE = app
 TARGET = Qwent
+
+CONFIG += c++latest
+
 HEADERS += ./Card.h \
     ./DeckJsonSerializer.h \
     ./Match.h \

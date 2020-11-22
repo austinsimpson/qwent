@@ -238,7 +238,7 @@ void QwentGameWidget::mouseReleaseEvent
 		const int cardWidth = playerHandWidth / _game.data()->getHand(0).size() - cardSpacing;
 		const int cardIndex = (mouseEvent->pos().x() - left) / (cardWidth + cardSpacing);
 		const auto& selectedCard = _game.data()->getHand(0)[cardIndex];
-		if (selectedCard.data()->fieldPosition() != FieldPosition::Any)
+		if (selectedCard.data()->fieldPosition() != FieldPosition::Any || selectedCard.data()->specialEffect() == Card::SpecialEffect::ClearDemoralize)
 		{
 			_game.data()->playCard(0, cardIndex);
 		}
