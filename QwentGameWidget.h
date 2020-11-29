@@ -7,7 +7,6 @@
 #include "QwentGame.h"
 #include "QwentRow.h"
 
-
 class QwentGameWidget : public QWidget
 {
 	Q_OBJECT
@@ -21,24 +20,54 @@ public:
 	void paintEvent(QPaintEvent* paintEvent) override;
 
 	enum class MouseSelectionMode {
-		Default,
+		SelectCard,
 		SelectRow
 	};
 
 private:
-	void mouseMoveEvent(QMouseEvent* mouseEvent);
-	void mouseReleaseEvent(QMouseEvent* mouseEvent);
+	void resizeEvent(QResizeEvent* event) override;
+	void mouseMoveEvent(QMouseEvent* mouseEvent) override;
+	void mouseReleaseEvent(QMouseEvent* mouseEvent) override;
+	void keyReleaseEvent(QKeyEvent* keyEvent) override;
 
-	void drawRows(QPainter& painter, const std::array<QwentRow, 6>& rows, const QRect& painterWindow);
-	void drawRow(QPainter& painter, const QwentRow& row, const QRect& rowRect);
+	void drawRows(QPainter& painter, const std::array<QwentRow, 6>& rows);
+	void drawRow(QPainter& painter, const QwentRow& row, const QRectF& rowRect);
 
-	void drawCard(QPainter& painter, const Card& card, const QRect& cardRect, unsigned int effectAttackPower);
+	void drawCard(QPainter& painter, const Card& card, const QRectF& cardRect, unsigned int effectAttackPower);
 
-	void drawPlayerInfoAndScores(QPainter& painter, const QRect& infoRect);
+	void drawPlayerInfoAndScores(QPainter& painter);
 	void drawPlayerLivesLeft(QPainter& painter, QPoint origin, unsigned int radius, unsigned int roundsLost, unsigned int roundsToWin);
 
-	void drawPlayerHand(QPainter& painter, const QVector<QWeakPointer<Card>>& cards, const QRect& painterWindow);
+	void drawPlayerHand(QPainter& painter, const QVector<QWeakPointer<Card>>& cards);
+
+	void drawEndTurnButton(QPainter& painter);
+
+	const QRectF getRowGeometry(unsigned int rowIndex) const;
+
+	MouseSelectionMode _mouseSelectionMode{ MouseSelectionMode::SelectCard };
 
 	QWeakPointer<QwentGame> _game;
 	QPoint _lastMousePosition;
+
+	const qreal _playerInfoRelativeWidth { .1 };
+	const qreal _playerInfoRelativeHeight { .8 };
+
+	const qreal _rowsRelativeWidth { .9 };
+	const qreal _rowsRelativeHeight { .8 };
+
+	const qreal _playerHandRelativeWidth { .9 };
+	const qreal _playerHandRelativeHeight { .2 };
+
+	const qreal _defaultSpacing { 4. };
+
+	const qreal _endTurnButtonWidth { 100. };
+	const qreal _endTurnButtonHeight { 40. };
+
+	QRectF _playerInfoWindow;
+	QRectF _rowsWindow;
+	QRectF _playerHandWindow;
+
+	QRectF _endTurnButtonRect;
+
+	unsigned int _pendingCardIndex{0};
 };

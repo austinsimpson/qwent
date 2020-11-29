@@ -1,9 +1,13 @@
+#include "NullQwentStrategy.h"
+#include "BraindeadQwentStrategy.h"
 #include "QwentGame.h"
 
 #include <algorithm>
 
 QwentGame::QwentGame()
 {
+	_strategies.push_back(QSharedPointer<IQwentStrategy>((IQwentStrategy*)(new NullQwentStrategy)));
+	_strategies.push_back(QSharedPointer<IQwentStrategy>((IQwentStrategy*)(new BraindeadQwentStrategy(1))));
 	for (int index = 0; index < 6; ++index)
 	{
 		_rows[index].setFieldPosition(static_cast<FieldPosition>(index % 3));
@@ -13,6 +17,7 @@ QwentGame::QwentGame()
 void QwentGame::startMatch()
 {
 	_currentMatch.clear();
+	_currentPlayerIndex = rand() % 2;
 }
 
 void QwentGame::startRound()
@@ -29,6 +34,18 @@ void QwentGame::endRound()
 	unsigned int winningPlayerScore = getPlayerScore(winningPlayerIndex);
 
 	_currentMatch.addRoundResults(winningPlayerIndex, winningPlayerScore);
+
+	for (auto& row : _rows)
+	{
+		row.clear();
+	}
+
+	_strategies[]->performTurn(this);
+}
+
+void QwentGame::endTurn()
+{
+	_currentMatch.endTurn();
 }
 
 void QwentGame::playCard
@@ -38,7 +55,7 @@ void QwentGame::playCard
 )
 {
 	const auto& card = _players[playerIndex].hand()[cardIndex];
-	const auto fieldPosition = card.data()->fieldPosition();
+	const auto fieldPosition = card.toStrongRef()->fieldPosition();
 	playCard(playerIndex, cardIndex, fieldPosition);
 }
 
@@ -50,8 +67,8 @@ void QwentGame::playCard
 )
 {
 	const auto& card = _players[playerIndex].hand()[cardIndex];
-	assert(card.data()->fieldPosition() == fieldPosition || card.data()->fieldPosition() == FieldPosition::Any);
-	switch (card.data()->specialEffect())
+	assert(card.toStrongRef()->fieldPosition() == fieldPosition || card.toStrongRef()->fieldPosition() == FieldPosition::Any && playerIndex == _currentPlayerIndex);
+	switch (card.toStrongRef()->specialEffect())
 	{
 	case Card::SpecialEffect::Spy:
 		getRow(1 - playerIndex, fieldPosition).addCard(card);
@@ -73,14 +90,13 @@ void QwentGame::playCard
 	}
 
 	_players[playerIndex].removeCardFromHand(cardIndex);
+	_currentPlayerIndex = (_currentPlayerIndex + 1) % 2;
+
+	_strategies[_currentPlayerIndex]->performTurn(this);
 }
 
 unsigned int QwentGame::winningPlayer() const
 {
-	auto rowSumLambda = [](unsigned int totalScore, const QwentRow& row) {
-		return totalScore + row.getTotalAttackPower();
-	};
-
 	unsigned int firstPlayerScore = getPlayerScore(0);
 	unsigned int secondPlayerScore = getPlayerScore(1);
 	return firstPlayerScore > secondPlayerScore ? 0u : 1u;

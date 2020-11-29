@@ -11,7 +11,10 @@ HEADERS += ./Card.h \
     ./QwentGame.h \
     ./QwentRow.h \
     ./QwentWindow.h \
-    ./QwentGameWidget.h
+    ./QwentGameWidget.h \
+    BraindeadQwentStrategy.h \
+    IQwentStrategy.h \
+    NullQwentStrategy.h
 
 SOURCES += ./Card.cpp \
     ./DeckJsonSerializer.cpp \
@@ -21,6 +24,8 @@ SOURCES += ./Card.cpp \
     ./QwentGameWidget.cpp \
     ./QwentRow.cpp \
     ./QwentWindow.cpp \
-    ./main.cpp
+    ./main.cpp \
+    BraindeadQwentStrategy.cpp \
+    NullQwentStrategy.cpp
 FORMS += ./QwentWindow.ui
 RESOURCES += QwentWindow.qrc

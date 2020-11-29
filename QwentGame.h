@@ -6,6 +6,8 @@
 #include "Player.h"
 #include "QwentRow.h"
 
+class IQwentStrategy;
+
 class QwentGame
 {
 public:
@@ -15,6 +17,7 @@ public:
 
 	void startRound();
 	void endRound();
+	void endTurn();
 
 	void playCard(unsigned int playerIndex, unsigned int cardIndex);
 	void playCard(unsigned int playerIndex, unsigned int cardIndex, FieldPosition fieldPosition);
@@ -40,5 +43,6 @@ private:
 	Match _currentMatch;
 	std::array<QwentRow, 6> _rows;
 	std::array<Player, 2> _players;
+	QVector<QSharedPointer<IQwentStrategy>> _strategies;
 };
 

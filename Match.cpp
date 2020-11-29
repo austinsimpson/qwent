@@ -2,7 +2,9 @@
 
 void Match::clear()
 {
+	_currentPlayerIndex = rand() % 2;
 	_rounds.clear();
+	_currentRound = 0;
 }
 
 void Match::addRoundResults
@@ -12,6 +14,22 @@ void Match::addRoundResults
 )
 {
 	_rounds.append(Round{ winningPlayerIndex, score });
+	++_currentRound;
+}
+
+void Match::endTurn()
+{
+	_rounds[_currentRound].endTurn(_currentPlayerIndex);
+}
+
+unsigned int Match::currentRound() const
+{
+	return _currentRound;
+}
+
+unsigned int Match::currentPlayer() const
+{
+	return _currentPlayerIndex;
 }
 
 unsigned int Match::getRoundsLostByPlayer

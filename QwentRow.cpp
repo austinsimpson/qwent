@@ -1,14 +1,14 @@
 #include "QwentRow.h"
 
 auto isDemoralizingCard = [](const QWeakPointer<Card>& card) -> bool {
-	return card.data()->specialEffect() == Card::SpecialEffect::Demoralize;
+	return card.toStrongRef()->specialEffect() == Card::SpecialEffect::Demoralize;
 };
 
 auto isDoublingCard = [](const QWeakPointer<Card>& card) -> bool {
-	return card.data()->specialEffect() == Card::SpecialEffect::DoubleAttackEntireRow;
+	return card.toStrongRef()->specialEffect() == Card::SpecialEffect::DoubleAttackEntireRow;
 };
 
-QwentRow::QwentRow() : _isDemoralized{ false }, _isDoubled{ false }, _totalAttackPower{0u}, _fieldPosition{FieldPosition::Any}
+QwentRow::QwentRow() : _totalAttackPower{0u}, _isDemoralized{ false }, _isDoubled{ false }, _fieldPosition{FieldPosition::Any}
 {
 
 }
@@ -26,7 +26,7 @@ void QwentRow::addCard
 {
 	int demoralizingCardIndex = std::find_if(_cards.cbegin(), _cards.cend(), isDemoralizingCard) - _cards.cbegin();
 
-	switch (card.data()->specialEffect())
+	switch (card.toStrongRef()->specialEffect())
 	{
 	case Card::SpecialEffect::ClearDemoralize:	
 		if (0 <= demoralizingCardIndex && demoralizingCardIndex < _cards.size())
@@ -69,25 +69,25 @@ unsigned int QwentRow::effectiveAttackPower
 	const bool demoralized = isDemoralized();
 	const bool doubled = isDoubled();
 
-	Card* card = cardPointer.data();
+	auto card = cardPointer.toStrongRef();
 	switch (card->specialEffect())
 	{
-	case Card::SpecialEffect::DoubleAttackOfSameCard: 
-	{
-		size_t cardsOfSameType = std::count_if(_cards.cbegin(), _cards.cend(), [card](const QWeakPointer<Card>& other) { return card == other.data(); });
-		return pow(2, cardsOfSameType - 1) * card->attackPower(); 
-	}
-	case Card::SpecialEffect::Demoralize:
-	case Card::SpecialEffect::DoubleAttackEntireRow: 
-	{
-		return 0;
-	}
-	case Card::SpecialEffect::None:
-	case Card::SpecialEffect::Spy:
-		return (demoralized == false || card->isLegendary() ? card->attackPower() : 1u);
-	default:
-		return 0;
-	}
+		case Card::SpecialEffect::DoubleAttackOfSameCard:
+		{
+			size_t cardsOfSameType = std::count_if(_cards.cbegin(), _cards.cend(), [card](const QWeakPointer<Card>& other) { return card == other.toStrongRef(); });
+			return (doubled && card->isLegendary() == false ? 2 : 1) * pow(2, cardsOfSameType - 1) * card->attackPower();
+		}
+		case Card::SpecialEffect::Demoralize:
+		case Card::SpecialEffect::DoubleAttackEntireRow:
+		{
+			return 0;
+		}
+		case Card::SpecialEffect::None:
+		case Card::SpecialEffect::Spy:
+			return (doubled && card->isLegendary() == false ? 2 : 1) * (demoralized == false || card->isLegendary() ? card->attackPower() : 1u);
+		default:
+			return 0;
+		}
 }
 
 FieldPosition QwentRow::fieldPosition() const
@@ -100,22 +100,22 @@ unsigned int QwentRow::calculateTotalAttackPower() const
 	const bool demoralized = isDemoralized();
 	const bool doubled = isDoubled();
 
-	auto effectivePowerForCard = [this, demoralized](unsigned int runningTotal, const QWeakPointer<Card>& cardPointer)
+	auto effectivePowerForCard = [this, demoralized, doubled](unsigned int runningTotal, const QWeakPointer<Card>& cardPointer)
 	{
-		Card* card = cardPointer.data();
+		auto card = cardPointer.toStrongRef();
 		switch (card->specialEffect())
 		{
 		case Card::SpecialEffect::DoubleAttackOfSameCard:
 		{
-			size_t cardsOfSameType = std::count_if(_cards.cbegin(), _cards.cend(), [card](const QWeakPointer<Card>& other) { return card == other.data(); });
-			return runningTotal + static_cast<unsigned int>(pow(2, cardsOfSameType - 1)) * card->attackPower();
+			size_t cardsOfSameType = std::count_if(_cards.cbegin(), _cards.cend(), [card](const QWeakPointer<Card>& other) { return card == other.toStrongRef(); });
+			return runningTotal + ((doubled && card->isLegendary() == false ? 2 : 1) * static_cast<unsigned int>(pow(2, cardsOfSameType - 1)) * card->attackPower());
 		}
 		case Card::SpecialEffect::Demoralize:
 		case Card::SpecialEffect::DoubleAttackEntireRow:
 			return runningTotal;
 		case Card::SpecialEffect::None:
 		case Card::SpecialEffect::Spy:
-			return runningTotal + (demoralized == false || card->isLegendary() ? card->attackPower() : 1u);
+			return runningTotal + ((doubled && card->isLegendary() == false ? 2 : 1) * (demoralized == false || card->isLegendary() ? card->attackPower() : 1u));
 		default:
 			return runningTotal;
 		}
