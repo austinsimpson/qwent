@@ -1,74 +1,170 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="BraindeadQwentStrategy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Card.cpp">
-      <Filter>Sources</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DeckJsonSerializer.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>Sources</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Match.cpp">
-      <Filter>Sources</Filter>
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NullQwentStrategy.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
-      <Filter>Sources</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="QwentGame.cpp">
-      <Filter>Sources</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="QwentGameWidget.cpp">
-      <Filter>Sources</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="QwentRow.cpp">
-      <Filter>Sources</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="QwentWindow.cpp">
-      <Filter>Sources</Filter>
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LearningQwentStrategy.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BraindeadQwentStrategy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Card.h">
-      <Filter>Headers</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DeckJsonSerializer.h">
-      <Filter>Headers</Filter>
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IQwentStrategy.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Match.h">
-      <Filter>Headers</Filter>
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NullQwentStrategy.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
-      <Filter>Headers</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="QwentGame.h">
-      <Filter>Headers</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
+    <CustomBuild Include="QwentGameWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
     <ClInclude Include="QwentRow.h">
-      <Filter>Headers</Filter>
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <CustomBuild Include="QwentWindow.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <ClInclude Include="LearningQwentStrategy.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="QwentGameWidget.h">
-      <Filter>Headers</Filter>
-    </QtMoc>
-    <QtMoc Include="QwentWindow.h">
-      <Filter>Headers</Filter>
-    </QtMoc>
+    <ClCompile Include="debug\moc_QwentGameWidget.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="release\moc_QwentGameWidget.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="debug\moc_QwentWindow.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="release\moc_QwentWindow.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <CustomBuild Include="debug\moc_predefs.h.cbt">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="release\moc_predefs.h.cbt">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
+    <ClCompile Include="debug\qrc_QwentWindow.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="release\qrc_QwentWindow.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClInclude Include="ui_QwentWindow.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <QtRcc Include="QwentWindow.qrc" />
+    <CustomBuild Include="QwentWindow.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="QwentWindow.ui" />
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="Headers">
-      <UniqueIdentifier>{9f0844af-29e6-46fb-bd06-29554b08d060}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources">
-      <UniqueIdentifier>{f8f2ddd9-5f1e-4d95-a628-9aef8fb778f1}</UniqueIdentifier>
-    </Filter>
+    <CustomBuild Include="QwentWindow.qrc">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <None Include="resources\card-definitions.json">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\sample-deck.json">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

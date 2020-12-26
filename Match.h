@@ -6,28 +6,57 @@ struct Round
 {
 public:
 	Round() = default;
-	Round(unsigned int playerIndex, unsigned int score) : winningPlayerIndex{ playerIndex }, winningScore{ score } {}
-	Round(const Round& other) : winningPlayerIndex{ other.winningPlayerIndex }, winningScore{ other.winningScore } {}
+	Round(std::array<unsigned int, 2>& scores) : _playerScores{ scores } {}
+	Round(const Round& other) : _playerScores{ other._playerScores } {}
 
-	inline void endTurn(unsigned int playerIndex) { _hasEndedTurn[playerIndex] = true; }
+	inline void endTurn(unsigned int playerIndex, bool didForfeit = false) { _hasEndedTurn[playerIndex] = didForfeit; }
 	inline bool hasEndedTurn(unsigned int playerIndex) const { return _hasEndedTurn[playerIndex]; }
 
-	unsigned int winningPlayerIndex;
-	unsigned int winningScore;
+	inline bool hasRemainingTurn() const 
+	{ 
+		return std::any_of(_hasEndedTurn.begin(), _hasEndedTurn.end(), [](bool hasEnded) 
+		{ 
+			return hasEnded == false; 
+		}); 
+	};
 
+
+	inline bool isComplete() const { return _isComplete; }
+
+	void setScores(const std::array<unsigned int, 2>& scores) { _playerScores = scores; _isComplete = true; };
+
+	unsigned int winningPlayerIndex() const;
+	unsigned int winningScore() const;
+
+	bool _isComplete{ false };
 	std::array<bool, 2> _hasEndedTurn { false, false };
+	std::array<unsigned int, 2> _playerScores{ 0, 0 };
+};
+
+struct MatchSnapshot
+{
+	size_t firstPlayerScore;
+	size_t secondPlayerScore;
+	bool isCloseCombatDemoralized;
+	bool isRangedRowDemoralized;
+	bool isSeigeRowDemoralized;
 };
 
 class Match
 {
 public:
-	Match() = default;
+	Match();
+
 	Match(const Match& other) : _rounds{ other._rounds } {}
 
 	void clear();
-	void addRoundResults(unsigned int winningPlayerIndex, unsigned int score);
+	void endRound(const std::array<unsigned int, 2>& playerScores);
 
-	void endTurn();
+	void endCurrentTurn(bool didForfeit = false);
+
+	bool hasRemainingTurn() const;
+
+	bool isOver() const;
 
 	unsigned int currentRound() const;
 	unsigned int currentPlayer() const;
@@ -41,4 +70,5 @@ private:
 	unsigned int _roundsToWin{ 2 };
 	unsigned int _currentRound{ 0 };
 	QVector<Round> _rounds;
+	unsigned int _numberOfRounds{ 3 };
 };

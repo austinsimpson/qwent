@@ -197,6 +197,10 @@ void QwentGameWidget::drawPlayerLivesLeft
 		{
 			painter.setBrush(Qt::green);
 		}
+		else
+		{
+			painter.setBrush(Qt::transparent);
+		}
 
 		painter.drawEllipse(origin, radius, radius);
 		origin -= QPoint((radius * 2) + 5, 0);
@@ -310,7 +314,7 @@ void QwentGameWidget::mouseReleaseEvent
 
 		if (_endTurnButtonRect.contains(_lastMousePosition))
 		{
-			_game.toStrongRef()->endRound();
+			_game.toStrongRef()->endTurn(true);
 		}
 
 		update();

@@ -39,7 +39,7 @@ void BraindeadQwentStrategy::performTurn
 		}
 		else
 		{
-			game->endRound();
+			game->endTurn(true);
 		}
 	}
 	else
@@ -50,7 +50,7 @@ void BraindeadQwentStrategy::performTurn
 		}
 		else
 		{
-			game->endRound();
+			game->endTurn(true);
 		}
 	}
 }

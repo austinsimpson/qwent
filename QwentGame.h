@@ -17,7 +17,7 @@ public:
 
 	void startRound();
 	void endRound();
-	void endTurn();
+	void endTurn(bool didForfeit = false);
 
 	void playCard(unsigned int playerIndex, unsigned int cardIndex);
 	void playCard(unsigned int playerIndex, unsigned int cardIndex, FieldPosition fieldPosition);
@@ -27,6 +27,8 @@ public:
 
 	const QVector<QWeakPointer<Card>>& getHand(unsigned int playerIndex) const;
 	const QVector<QWeakPointer<Card>>& getDeck(unsigned int playerIndex) const;
+
+	MatchSnapshot takeSnapshot() const;
 
 	void setDeck(unsigned int playerIndex, const QVector<QWeakPointer<Card>>& deck);
 

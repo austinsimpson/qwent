@@ -17,7 +17,7 @@ QwentGame::QwentGame()
 void QwentGame::startMatch()
 {
 	_currentMatch.clear();
-	_currentPlayerIndex = rand() % 2;
+	startRound();
 }
 
 void QwentGame::startRound()
@@ -26,26 +26,34 @@ void QwentGame::startRound()
 	{
 		row.clear();
 	}
+
+	_strategies[_currentMatch.currentPlayer()]->performTurn(this);
 }
 
 void QwentGame::endRound()
 {
-	unsigned int winningPlayerIndex = winningPlayer();
-	unsigned int winningPlayerScore = getPlayerScore(winningPlayerIndex);
-
-	_currentMatch.addRoundResults(winningPlayerIndex, winningPlayerScore);
-
-	for (auto& row : _rows)
-	{
-		row.clear();
-	}
-
-	_strategies[]->performTurn(this);
+	std::array<unsigned int, 2> scores{ getPlayerScore(0), getPlayerScore(1) };
+	_currentMatch.endRound(scores);
 }
 
-void QwentGame::endTurn()
+void QwentGame::endTurn
+(
+	bool didForfeit
+)
 {
-	_currentMatch.endTurn();
+	_currentMatch.endCurrentTurn(didForfeit);
+	if (_currentMatch.hasRemainingTurn() == false)
+	{
+		endRound();
+		if (!_currentMatch.isOver())
+		{
+			startRound();
+		}
+	}
+	else
+	{
+		_strategies[_currentMatch.currentPlayer()]->performTurn(this);
+	}
 }
 
 void QwentGame::playCard
@@ -67,7 +75,7 @@ void QwentGame::playCard
 )
 {
 	const auto& card = _players[playerIndex].hand()[cardIndex];
-	assert(card.toStrongRef()->fieldPosition() == fieldPosition || card.toStrongRef()->fieldPosition() == FieldPosition::Any && playerIndex == _currentPlayerIndex);
+	assert(card.toStrongRef()->fieldPosition() == fieldPosition || card.toStrongRef()->fieldPosition() == FieldPosition::Any && playerIndex == currentMatch().currentPlayer());
 	switch (card.toStrongRef()->specialEffect())
 	{
 	case Card::SpecialEffect::Spy:
@@ -90,9 +98,7 @@ void QwentGame::playCard
 	}
 
 	_players[playerIndex].removeCardFromHand(cardIndex);
-	_currentPlayerIndex = (_currentPlayerIndex + 1) % 2;
-
-	_strategies[_currentPlayerIndex]->performTurn(this);
+	endTurn(_players[playerIndex].hand().size() == 0);
 }
 
 unsigned int QwentGame::winningPlayer() const
@@ -123,6 +129,17 @@ const QVector<QWeakPointer<Card>>& QwentGame::getDeck
 )	const
 {
 	return _players[playerIndex].deck();
+}
+
+MatchSnapshot QwentGame::takeSnapshot() const
+{
+	MatchSnapshot result;
+	result.firstPlayerScore = getPlayerScore(0);
+	result.secondPlayerScore = getPlayerScore(1);
+	result.isCloseCombatDemoralized = getRow(0, FieldPosition::CloseCombat).isDemoralized(); //We can choose either player index because of symmetry
+	result.isRangedRowDemoralized = getRow(0, FieldPosition::Ranged).isDemoralized(); //We can choose either player index because of symmetry
+	result.isSeigeRowDemoralized = getRow(0, FieldPosition::Siege).isDemoralized(); //We can choose either player index because of symmetry
+	return result;
 }
 
 void QwentGame::setDeck
