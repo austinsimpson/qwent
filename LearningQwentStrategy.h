@@ -4,6 +4,7 @@
 #include "IQwentStrategy.h"
 #include "MatchSnapshot.h"
 
+#include <QIODevice>
 #include <QVector>
 #include <QWeakPointer>
 
@@ -31,6 +32,7 @@ struct StateAction
 class LearningQwentStrategy : public IQwentStrategy
 {
 public:
+	LearningQwentStrategy(size_t owningPlayerIndex);
 	LearningQwentStrategy(size_t owningPlayerIndex, size_t numberOfCards);
 	void performTurn(QwentGame* game) override;
 	void notifyGameOver(QwentGame* game) override;
@@ -39,6 +41,14 @@ public:
 	bool isLearning() const;
 
 	void setRewardFunction(std::function<double(const MatchSnapshot&, const MatchSnapshot&)> rewardFunction);
+
+	void saveToFile(QIODevice* ioDevice) const;
+	void loadFromFile(QIODevice* ioDevice);
+
+	inline auto& qTable()
+	{
+		return _qTable;
+	}
 
 private:
 	double getQValue(const MatchSnapshot& matchSnapshot, Action action);
@@ -59,7 +69,6 @@ private:
 
 	size_t _owningPlayerIndex;
 
-	size_t _numberOfActions;
 	size_t _forfeitActionIndex;
 
 	bool _hasLastAction { false };

@@ -1,4 +1,4 @@
-QT += core gui widgets
+QT += core widgets
 TEMPLATE = app
 TARGET = Qwent
 
