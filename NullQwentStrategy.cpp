@@ -12,3 +12,11 @@ void NullQwentStrategy::performTurn
 {
 	(void) game;
 }
+
+void NullQwentStrategy::notifyGameOver
+(
+	QwentGame* game
+)
+{
+	(void) game;
+}

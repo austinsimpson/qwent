@@ -54,3 +54,11 @@ void BraindeadQwentStrategy::performTurn
 		}
 	}
 }
+
+void BraindeadQwentStrategy::notifyGameOver
+(
+	QwentGame* game
+)
+{
+	(void) game;
+}

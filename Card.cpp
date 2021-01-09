@@ -6,13 +6,15 @@ Card::Card
 	SpecialEffect effect,
 	const QString& name,
 	bool isLegendary,
-	FieldPosition fieldPosition
+	FieldPosition fieldPosition,
+	unsigned int id
 ): 
 	_attackPower{ attackValue }, 
 	_specialEffect{ effect },
 	_name{ name },
 	_isLegendary{ isLegendary },
-	_fieldPosition{ fieldPosition }
+	_fieldPosition{ fieldPosition },
+	_id{id}
 {
 }
 
@@ -24,7 +26,8 @@ Card::Card
 	_specialEffect{ other._specialEffect },
 	_name{ other._name },
 	_isLegendary{ other._isLegendary },
-	_fieldPosition{ other._fieldPosition }
+	_fieldPosition{ other._fieldPosition },
+	_id { other._id }
 {
 }
 
@@ -36,7 +39,8 @@ Card::Card
 	_specialEffect{ other._specialEffect },
 	_name{ other._name },
 	_isLegendary{ other._isLegendary },
-	_fieldPosition{ other._fieldPosition }
+	_fieldPosition{ other._fieldPosition },
+	_id { other._id }
 {
 }
 
@@ -50,6 +54,7 @@ Card& Card::operator=
 	_name = other._name;
 	_isLegendary = other._isLegendary;
 	_fieldPosition = other._fieldPosition;
+	_id = other._id;
 	return *this;
 }
 
@@ -76,4 +81,9 @@ bool Card::isLegendary() const
 const QString& Card::name() const
 {
 	return _name;
+}
+
+unsigned int Card::id() const
+{
+	return _id;
 }

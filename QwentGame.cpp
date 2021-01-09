@@ -1,15 +1,29 @@
+#include "DeckJsonSerializer.h"
 #include "NullQwentStrategy.h"
 #include "BraindeadQwentStrategy.h"
+#include "LearningQwentStrategy.h"
 #include "QwentGame.h"
+#include "MatchSnapshot.h"
 
 #include <algorithm>
 
 QwentGame::QwentGame()
 {
-	_strategies.push_back(QSharedPointer<IQwentStrategy>((IQwentStrategy*)(new NullQwentStrategy)));
-	_strategies.push_back(QSharedPointer<IQwentStrategy>((IQwentStrategy*)(new BraindeadQwentStrategy(1))));
+	DeckJsonSerializer serializer;
+	_allCards = serializer.readAllCards(":/resources/card-definitions.json");
+
+	_players.push_back(Player{});
+	_players.push_back(Player{});
+
+	auto playerDeck = serializer.readDeck(":/resources/sample-deck.json", _allCards);
+	setDeck(0, playerDeck);
+	setDeck(1, playerDeck);
+
+	_strategies.push_back(QSharedPointer<IQwentStrategy>((IQwentStrategy*)(new BraindeadQwentStrategy(0))));
+	_strategies.push_back(QSharedPointer<IQwentStrategy>((IQwentStrategy*)(new LearningQwentStrategy(1, _allCards.count()))));
 	for (int index = 0; index < 6; ++index)
 	{
+		_rows.push_back(QwentRow{});
 		_rows[index].setFieldPosition(static_cast<FieldPosition>(index % 3));
 	}
 }
@@ -25,6 +39,11 @@ void QwentGame::startRound()
 	for (auto& row : _rows)
 	{
 		row.clear();
+	}
+
+	for (auto& player : _players)
+	{
+		player.generateRandomHand(10);
 	}
 
 	_strategies[_currentMatch.currentPlayer()]->performTurn(this);
@@ -48,6 +67,13 @@ void QwentGame::endTurn
 		if (!_currentMatch.isOver())
 		{
 			startRound();
+		}
+		else
+		{
+			for (auto strategy : _strategies)
+			{
+				strategy->notifyGameOver(this);
+			}
 		}
 	}
 	else
@@ -135,7 +161,11 @@ MatchSnapshot QwentGame::takeSnapshot() const
 {
 	MatchSnapshot result;
 	result.firstPlayerScore = getPlayerScore(0);
+	result.firstPlayerWinCount = currentMatch().getRoundsWonByPlayer(0);
+	//result.firstPlayerCardCount = _players[0].hand().size();
 	result.secondPlayerScore = getPlayerScore(1);
+	result.secondPlayerWinCount = currentMatch().getRoundsWonByPlayer(1);
+	//result.secondPlayerCardCount = _players[1].hand().size();
 	result.isCloseCombatDemoralized = getRow(0, FieldPosition::CloseCombat).isDemoralized(); //We can choose either player index because of symmetry
 	result.isRangedRowDemoralized = getRow(0, FieldPosition::Ranged).isDemoralized(); //We can choose either player index because of symmetry
 	result.isSeigeRowDemoralized = getRow(0, FieldPosition::Siege).isDemoralized(); //We can choose either player index because of symmetry
@@ -145,7 +175,7 @@ MatchSnapshot QwentGame::takeSnapshot() const
 void QwentGame::setDeck
 (
 	unsigned int playerIndex, 
-	const QVector<QWeakPointer<Card>>& deck
+	QVector<QWeakPointer<Card>> deck
 )
 {
 	_players[playerIndex].setDeck(deck);
@@ -175,7 +205,7 @@ const Match& QwentGame::currentMatch() const
 	return _currentMatch;
 }
 
-const std::array<QwentRow, 6>& QwentGame::rows() const
+const QVector<QwentRow>& QwentGame::rows() const
 {
 	return _rows;
 }
@@ -187,4 +217,12 @@ unsigned int QwentGame::rowIndex
 )	const
 {
 	return playerIndex * 3 + static_cast<int>(fieldPosition);
+}
+
+QSharedPointer<IQwentStrategy> QwentGame::getStrategy
+(
+	int playerIndex
+)
+{
+	return _strategies[playerIndex];
 }

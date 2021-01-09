@@ -33,15 +33,6 @@ public:
 	std::array<unsigned int, 2> _playerScores{ 0, 0 };
 };
 
-struct MatchSnapshot
-{
-	size_t firstPlayerScore;
-	size_t secondPlayerScore;
-	bool isCloseCombatDemoralized;
-	bool isRangedRowDemoralized;
-	bool isSeigeRowDemoralized;
-};
-
 class Match
 {
 public:
@@ -62,6 +53,9 @@ public:
 	unsigned int currentPlayer() const;
 
 	unsigned int getRoundsLostByPlayer(unsigned int playerIndex) const;
+	unsigned int getRoundsWonByPlayer(unsigned int playerIndex) const;
+
+	unsigned int winningPlayer() const;
 
 	void setRoundsToWin(unsigned int roundsToWin);
 	unsigned int roundsToWin() const;

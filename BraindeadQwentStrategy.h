@@ -9,6 +9,7 @@ public:
 	BraindeadQwentStrategy(unsigned int owningPlayerIndex);
 
 	void performTurn(QwentGame* game) override;
+	void notifyGameOver(QwentGame* game) override;
 
 private:
 	unsigned int _owningPlayerIndex;

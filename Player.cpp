@@ -12,7 +12,7 @@ const QVector<QWeakPointer<Card>>& Player::hand() const
 
 void Player::setDeck
 (
-	const QVector<QWeakPointer<Card>>& deck
+	QVector<QWeakPointer<Card>> deck
 )
 {
 	_deck = deck;

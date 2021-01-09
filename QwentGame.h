@@ -5,6 +5,7 @@
 #include "Match.h"
 #include "Player.h"
 #include "QwentRow.h"
+#include "MatchSnapshot.h"
 
 class IQwentStrategy;
 
@@ -30,21 +31,24 @@ public:
 
 	MatchSnapshot takeSnapshot() const;
 
-	void setDeck(unsigned int playerIndex, const QVector<QWeakPointer<Card>>& deck);
+	void setDeck(unsigned int playerIndex, QVector<QWeakPointer<Card>> deck);
 
 	QwentRow& getRow(unsigned int playerIndex, FieldPosition rowType);
 	const QwentRow& getRow(unsigned int playerIndex, FieldPosition rowType) const;
 
 	const Match& currentMatch() const;
 
-	const std::array<QwentRow, 6>& rows() const;
+	const QVector<QwentRow>& rows() const;
+
+	QSharedPointer<IQwentStrategy> getStrategy(int playerIndex);
 
 private:
 	unsigned int rowIndex(unsigned int playerIndex, FieldPosition rowType) const;
 
 	Match _currentMatch;
-	std::array<QwentRow, 6> _rows;
-	std::array<Player, 2> _players;
+	QVector<QwentRow> _rows;
+	QVector<Player> _players;
 	QVector<QSharedPointer<IQwentStrategy>> _strategies;
+	QVector<QSharedPointer<Card>> _allCards;
 };
 

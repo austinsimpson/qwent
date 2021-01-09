@@ -9,8 +9,9 @@ class Player
 {
 public:
 	Player() = default;
+	Player(const Player& other) = default;
 
-	void setDeck(const QVector<QWeakPointer<Card>>& deck);
+	void setDeck(QVector<QWeakPointer<Card>> deck);
 	const QVector<QWeakPointer<Card>>& deck() const;
 
 	const QVector<QWeakPointer<Card>>& hand() const;
@@ -20,9 +21,8 @@ public:
 
 	void addCardsToHand(unsigned int numberOfCards);
 
-private:
 	void generateRandomHand(unsigned int handSize);
-
+private:
 	QString _name;
 
 	QVector<QWeakPointer<Card>> _deck;

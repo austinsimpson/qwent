@@ -30,7 +30,7 @@ private:
 	void mouseReleaseEvent(QMouseEvent* mouseEvent) override;
 	void keyReleaseEvent(QKeyEvent* keyEvent) override;
 
-	void drawRows(QPainter& painter, const std::array<QwentRow, 6>& rows);
+	void drawRows(QPainter& painter, const QVector<QwentRow>& rows);
 	void drawRow(QPainter& painter, const QwentRow& row, const QRectF& rowRect);
 
 	void drawCard(QPainter& painter, const Card& card, const QRectF& cardRect, unsigned int effectAttackPower);

@@ -9,6 +9,7 @@ public:
 	NullQwentStrategy();
 
 	void performTurn(QwentGame* game) override;
+	void notifyGameOver(QwentGame* game) override;
 };
 
 #endif // NULLQWENTSTRATEGY_H

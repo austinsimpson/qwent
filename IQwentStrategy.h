@@ -7,6 +7,7 @@ class IQwentStrategy
 {
 public:
 	virtual void performTurn(QwentGame* game) = 0;
+	virtual void notifyGameOver(QwentGame* game) = 0;
 	virtual ~IQwentStrategy() = default;
 };
 

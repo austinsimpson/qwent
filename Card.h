@@ -8,7 +8,8 @@ enum class FieldPosition
 	CloseCombat = 0,
 	Ranged = 1,
 	Siege = 2,
-	Any = 3
+	Any = 3,
+	Every = 4
 };
 
 static const QVector<QString> FieldPositionText{ "Close Combat", "Ranged", "Siege"};
@@ -28,7 +29,7 @@ public:
 		ClearDemoralize = 7
 	};
 	
-	Card(unsigned int attackValue, SpecialEffect effect, const QString& name, bool isLegendary, FieldPosition fieldPosition);
+	Card(unsigned int attackValue, SpecialEffect effect, const QString& name, bool isLegendary, FieldPosition fieldPosition, unsigned int id);
 	Card(const Card& other);
 	Card(Card&& other);
 
@@ -40,6 +41,7 @@ public:
 
 	bool isLegendary() const;
 	const QString& name() const;
+	unsigned int id() const;
 
 private:
 	QString _name;
@@ -47,5 +49,7 @@ private:
 	SpecialEffect _specialEffect{ SpecialEffect::None };
 	bool _isLegendary{ false };
 	FieldPosition _fieldPosition;
+
+	unsigned int _id;
 };
 

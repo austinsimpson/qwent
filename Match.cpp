@@ -45,14 +45,14 @@ bool Match::hasRemainingTurn() const
 
 bool Match::isOver() const
 {
-	constexpr auto winCountLambdaGenerator = [](int playerIndex) {
+	auto winCountLambdaGenerator = [](unsigned int playerIndex) {
 		return [playerIndex](const Round& round) {
 			return round.winningPlayerIndex() == playerIndex && round.isComplete();
 		};
 	};
 
-	std::array<unsigned int, 2> roundsWon = {
-		std::count_if(_rounds.begin(), _rounds.end(), winCountLambdaGenerator(0)), 
+	std::array<long, 2> roundsWon = {
+		std::count_if(_rounds.begin(), _rounds.end(), winCountLambdaGenerator(0)),
 		std::count_if(_rounds.begin(), _rounds.end(), winCountLambdaGenerator(1)) 
 	};
 	return std::any_of(roundsWon.begin(), roundsWon.end(), [this](unsigned int winCount) { return winCount >= _roundsToWin; });
@@ -74,6 +74,26 @@ unsigned int Match::getRoundsLostByPlayer
 )	const
 {
 	return std::count_if(_rounds.cbegin(), _rounds.cend(), [playerIndex](const Round& round) { return round.isComplete() && round.winningPlayerIndex() != playerIndex; });
+}
+
+unsigned int Match::getRoundsWonByPlayer
+(
+	unsigned int playerIndex
+)	const
+{
+	return std::count_if(_rounds.cbegin(), _rounds.cend(), [playerIndex](const Round& round) { return round.isComplete() && round.winningPlayerIndex() == playerIndex; });
+}
+
+unsigned int Match::winningPlayer() const
+{
+	const auto roundsWonByFirst = getRoundsWonByPlayer(0);
+	const auto roundsWonBySecond = getRoundsWonByPlayer(1);
+	if (roundsWonByFirst == roundsWonBySecond)
+		return 3;
+	else
+	{
+		return roundsWonByFirst > roundsWonBySecond ? 0 : 1;
+	}
 }
 
 void Match::setRoundsToWin

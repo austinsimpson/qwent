@@ -59,7 +59,7 @@ void QwentGameWidget::setGame
 void QwentGameWidget::drawRows
 (
 	QPainter& painter,
-	const std::array<QwentRow, 6>& rows
+	const QVector<QwentRow>& rows
 )
 {
 	for (const QwentRow& row : rows)
@@ -234,7 +234,7 @@ void QwentGameWidget::drawPlayerHand
 		QFontMetricsF fontMetrics(painterFont);
 		const QString noCardsText = "You are out of cards.";
 
-		const qreal halfTextWidth = fontMetrics.width(noCardsText) / 2;
+		const qreal halfTextWidth = fontMetrics.horizontalAdvance(noCardsText) / 2;
 		const qreal halfTextHeight = fontMetrics.height() / 2;
 
 		const auto rectCenter = _playerHandWindow.center();

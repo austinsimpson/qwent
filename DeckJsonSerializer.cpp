@@ -33,7 +33,8 @@ QVector<QSharedPointer<Card>> DeckJsonSerializer::readAllCards
 	if (jsonDocument.isNull() == false)
 	{
 		const auto& rootElement = jsonDocument.object();
-		for (const auto& cardDefinitionJson : rootElement.value("cards").toArray())
+		unsigned int cardId = 0;
+		for (const auto cardDefinitionJson : rootElement.value("cards").toArray())
 		{
 			const auto cardDefinitionObject = cardDefinitionJson.toObject();
 			const auto attackPower = static_cast<unsigned int>(cardDefinitionObject.value("attackPower").toInt());
@@ -41,7 +42,8 @@ QVector<QSharedPointer<Card>> DeckJsonSerializer::readAllCards
 			const auto isLegendary = cardDefinitionObject.value("isLegendary").toBool();
 			const auto specialEffect = static_cast<Card::SpecialEffect>(cardDefinitionObject.value("specialEffect").toInt());
 			const auto fieldPosition = static_cast<FieldPosition>(cardDefinitionObject.value("fieldPosition").toInt());
-			result.append(QSharedPointer<Card>(new Card{ attackPower, specialEffect, name, isLegendary, fieldPosition}));
+			result.append(QSharedPointer<Card>(new Card{ attackPower, specialEffect, name, isLegendary, fieldPosition, cardId}));
+			++cardId;
 		}
 	}
 
@@ -54,7 +56,6 @@ QVector<QWeakPointer<Card>> DeckJsonSerializer::readDeck
 	const QVector<QSharedPointer<Card>>& availableCards
 )	const
 {
-	
 	if (QFile::exists(filePath)) [[likely]]
 	{
 		QFile file(filePath);
@@ -83,7 +84,7 @@ QVector<QWeakPointer<Card>> DeckJsonSerializer::readDeck
 		if (jsonDocument.isNull() == false)
 		{
 			const auto& rootElement = jsonDocument.object();
-			for (const auto& cardIndexJson : rootElement.value("cards").toArray())
+			for (const auto cardIndexJson : rootElement.value("cards").toArray())
 			{
 				int cardIndex = cardIndexJson.toInt();
 				result.append(availableCards[cardIndex].toWeakRef());
