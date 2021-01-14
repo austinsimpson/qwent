@@ -8,7 +8,7 @@
 
 #include <QDebug>
 
-constexpr int kScoreBucketSize = 10;
+constexpr int kScoreBucketSize = 5;
 constexpr auto kFileMagic = 0x71746169; //"qtai" in hex
 
 LearningQwentStrategy::LearningQwentStrategy
@@ -16,7 +16,8 @@ LearningQwentStrategy::LearningQwentStrategy
 	size_t owningPlayerIndex
 ):
 	_owningPlayerIndex{ owningPlayerIndex },
-	_rewardFunction(std::bind(&LearningQwentStrategy::winRoundRewardFunction, this, std::placeholders::_1, std::placeholders::_2))
+	_rewardFunction(std::bind(&LearningQwentStrategy::winRoundRewardFunction, this, std::placeholders::_1, std::placeholders::_2)),
+	_forfeitActionIndex{ 14 }
 {
 }
 
@@ -79,7 +80,7 @@ void LearningQwentStrategy::notifyGameOver
 	{
 		bool didWin = game->currentMatch().winningPlayer() == _owningPlayerIndex;
 
-		double reward = didWin ? 100.0 : -1000.0;
+		double reward = didWin ? _winReward : _lossPenalty;
 		double currentQValue = getQValue(_lastSnapshot, _lastAction);
 		//Since this is a terminal state, we can ignore max_a'(Q(s,a'))
 		setQValue(_lastSnapshot, _lastAction, (1. - _learningRate) * currentQValue +  _learningRate * reward);
@@ -204,15 +205,13 @@ double LearningQwentStrategy::winRoundRewardFunction
 )	const
 {
 	double reward = 0.;
-	int firstPlayerScoreDelta = after.firstPlayerWinCount - prior.firstPlayerWinCount;
-	int secondPlayerScoreDelta = after.secondPlayerWinCount - prior.secondPlayerWinCount;
 	if (_owningPlayerIndex == 0)
 	{
-		reward = firstPlayerScoreDelta - secondPlayerScoreDelta;
+		reward = after.scoreDifference - prior.scoreDifference;
 	}
 	else
 	{
-		reward = secondPlayerScoreDelta - firstPlayerScoreDelta;
+		reward =  -1 * (after.scoreDifference - prior.scoreDifference);
 	}
 
 	return reward;
@@ -236,8 +235,7 @@ MatchSnapshot LearningQwentStrategy::bucketizeSnapshot
 	MatchSnapshot snapshot
 )	const
 {
-	snapshot.firstPlayerScore /= kScoreBucketSize;
-	snapshot.secondPlayerScore /= kScoreBucketSize;
+	snapshot.scoreDifference /= kScoreBucketSize;
 	return snapshot;
 }
 
@@ -251,13 +249,13 @@ void LearningQwentStrategy::saveToFile
 		QDataStream stream{ioDevice};
 		stream << (int) kFileMagic;
 		stream.setVersion(QDataStream::Qt_5_15);
+		stream << (int) _forfeitActionIndex;
 
 		for (const auto& [stateAction, qValue] : _qTable)
 		{
-			stream << (unsigned int) stateAction.snapshot.firstPlayerScore;
-			stream << (unsigned int) stateAction.snapshot.firstPlayerWinCount;
-			stream << (unsigned int) stateAction.snapshot.secondPlayerScore;
-			stream << (unsigned int) stateAction.snapshot.secondPlayerWinCount;
+			stream << stateAction.snapshot.scoreDifference;
+			stream << stateAction.snapshot.firstPlayerAboutToWin;
+			stream << stateAction.snapshot.secondPlayerAboutToWin;
 			stream << stateAction.snapshot.isCloseCombatDemoralized;
 			stream << stateAction.snapshot.isRangedRowDemoralized;
 			stream << stateAction.snapshot.isSeigeRowDemoralized;
@@ -293,24 +291,17 @@ void LearningQwentStrategy::loadFromFile
 
 		while (stream.atEnd() == false)
 		{
-			unsigned int firstPlayerScore = 0;
-			unsigned int firstPlayerWinCount = 0;
-			unsigned int secondPlayerScore = 0;
-			unsigned int secondPlayerWinCount = 0;
+			int scoreDifference = 0;
 
 			StateAction stateAction{};
-			stream >> firstPlayerScore;
-			stream >> firstPlayerWinCount;
-			stream >> secondPlayerScore;
-			stream >> secondPlayerWinCount;
+			stream >> scoreDifference;
+			stream >> stateAction.snapshot.firstPlayerAboutToWin;
+			stream >> stateAction.snapshot.secondPlayerAboutToWin;
 			stream >> stateAction.snapshot.isCloseCombatDemoralized;
 			stream >> stateAction.snapshot.isRangedRowDemoralized;
 			stream >> stateAction.snapshot.isSeigeRowDemoralized;
 
-			stateAction.snapshot.firstPlayerScore = firstPlayerScore;
-			stateAction.snapshot.firstPlayerWinCount = firstPlayerWinCount;
-			stateAction.snapshot.secondPlayerScore = secondPlayerScore;
-			stateAction.snapshot.secondPlayerWinCount = secondPlayerWinCount;
+			stateAction.snapshot.scoreDifference = scoreDifference;
 
 			unsigned int actionIndex = 0;
 			stream >> actionIndex;

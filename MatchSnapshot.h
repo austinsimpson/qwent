@@ -6,11 +6,9 @@
 
 struct MatchSnapshot
 {
-	size_t firstPlayerScore;
-	size_t firstPlayerWinCount;
-	//size_t firstPlayerCardCount;
-	size_t secondPlayerScore;
-	size_t secondPlayerWinCount;
+	int scoreDifference;
+	bool firstPlayerAboutToWin;
+	bool secondPlayerAboutToWin;
 	//size_t secondPlayerCardCount;
 	bool isCloseCombatDemoralized;
 	bool isRangedRowDemoralized;
@@ -21,41 +19,23 @@ struct MatchSnapshot
 
 	std::strong_ordering operator <=>(const MatchSnapshot& other) const
 	{
-		std::strong_ordering result = firstPlayerScore <=> other.firstPlayerScore;
+		std::strong_ordering result = scoreDifference <=> other.scoreDifference;
 		if (result != 0)
 		{
 			return result;
 		}
 
-		result = firstPlayerWinCount <=> other.firstPlayerWinCount;
+		result = firstPlayerAboutToWin <=> other.firstPlayerAboutToWin;
 		if (result != 0)
 		{
 			return result;
 		}
 
-		/*result = firstPlayerCardCount <=> other.firstPlayerCardCount;
-		if (result != 0)
-		{
-			return result;
-		}*/
-
-		result = secondPlayerScore <=> other.secondPlayerScore;
+		result = secondPlayerAboutToWin <=> other.secondPlayerAboutToWin;
 		if (result != 0)
 		{
 			return result;
 		}
-
-		result = secondPlayerWinCount <=> other.secondPlayerWinCount;
-		if (result != 0)
-		{
-			return result;
-		}
-
-		/*result = secondPlayerCardCount <=> other.secondPlayerCardCount;
-		if (result != 0)
-		{
-			return result;
-		}*/
 
 		result = isCloseCombatDemoralized <=> other.isCloseCombatDemoralized;
 		if (result != 0)

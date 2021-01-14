@@ -26,6 +26,8 @@ public:
 	unsigned int winningPlayer() const;
 	unsigned int getPlayerScore(unsigned int playerIndex) const;
 
+	const QVector<QSharedPointer<Card>>& allCards() const;
+
 	const QVector<QWeakPointer<Card>>& getHand(unsigned int playerIndex) const;
 	const QVector<QWeakPointer<Card>>& getDeck(unsigned int playerIndex) const;
 
@@ -41,6 +43,9 @@ public:
 	const QVector<QwentRow>& rows() const;
 
 	QSharedPointer<IQwentStrategy> getStrategy(int playerIndex);
+	void setStrategy(int playerIndex, const QSharedPointer<IQwentStrategy>& strategy);
+
+	enum GameState { PreGame, GameInProgress } _gameState;
 
 private:
 	unsigned int rowIndex(unsigned int playerIndex, FieldPosition rowType) const;

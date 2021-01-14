@@ -63,9 +63,11 @@ private:
 
 	bool _isLearning { true };
 
-	double _discountRate { 0.01 };
-	double _learningRate { 0.0005 };
+	double _discountRate { 0.1 };
+	double _learningRate { 1. };
 	double _explorationRate { 0.1 };
+	double _winReward { 10.0 };
+	double _lossPenalty { -10000.0 };
 
 	size_t _owningPlayerIndex;
 

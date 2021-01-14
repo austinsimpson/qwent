@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>resources/card-definitions.json</file>
         <file>resources/sample-deck.json</file>
+        <file>resources/qwentmodel.ai</file>
     </qresource>
 </RCC>

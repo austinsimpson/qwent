@@ -32,4 +32,5 @@ SOURCES += ./Card.cpp \
     ./LearningQwentStrategy.cpp \
     ./NullQwentStrategy.cpp
 FORMS += ./QwentWindow.ui
-RESOURCES += QwentWindow.qrc
+RESOURCES += \
+    QwentResources.qrc
