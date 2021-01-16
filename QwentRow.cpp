@@ -1,5 +1,7 @@
 #include "QwentRow.h"
 
+#include <algorithm>
+
 auto isDemoralizingCard = [](const QWeakPointer<Card>& card) -> bool {
 	return card.toStrongRef()->specialEffect() == Card::SpecialEffect::Demoralize;
 };
@@ -56,6 +58,31 @@ void QwentRow::setFieldPosition
 	_fieldPosition = fieldPosition;
 }
 
+//Scorch is a special action where a card is played and it vaporizes the strongest cards on the corresponding row for the other player.
+void QwentRow::scorch()
+{
+	QVector<int> result;
+
+	QVector<QWeakPointer<Card>> nonLegendaryCards;
+	for (const auto& card : _cards)
+	{
+		const auto& cardRef = *card.toStrongRef();
+		if (cardRef.isLegendary() == false && cardRef.specialEffect() != Card::SpecialEffect::Demoralize)
+		{
+			nonLegendaryCards.push_back(card);
+		}
+	}
+
+	if (nonLegendaryCards.count() > 0)
+	{
+		const auto& card = *std::max_element(nonLegendaryCards.begin(), nonLegendaryCards.end(), [this](const QWeakPointer<Card>& first, const QWeakPointer<Card>& second) -> bool {
+			return effectiveAttackPower(first) < effectiveAttackPower(second);
+		});
+
+		_cards.removeAll(card);
+	}
+}
+
 const QVector<QWeakPointer<Card>>& QwentRow::cards() const
 {
 	return _cards;
@@ -83,6 +110,7 @@ unsigned int QwentRow::effectiveAttackPower
 			return 0;
 		}
 		case Card::SpecialEffect::None:
+		case Card::SpecialEffect::Scorch:
 		case Card::SpecialEffect::Spy:
 			return (doubled && card->isLegendary() == false ? 2 : 1) * (demoralized == false || card->isLegendary() ? card->attackPower() : 1u);
 		default:
@@ -114,6 +142,7 @@ unsigned int QwentRow::calculateTotalAttackPower() const
 		case Card::SpecialEffect::DoubleAttackEntireRow:
 			return runningTotal;
 		case Card::SpecialEffect::None:
+		case Card::SpecialEffect::Scorch:
 		case Card::SpecialEffect::Spy:
 			return runningTotal + ((doubled && card->isLegendary() == false ? 2 : 1) * (demoralized == false || card->isLegendary() ? card->attackPower() : 1u));
 		default:

@@ -92,11 +92,18 @@
             "fieldPosition": 3
         },
         {
-            "name": "The Boys",
-            "attackPower": 5,
-            "isLegendary": false,
-            "specialEffect": 2,
-            "fieldPosition": 0
+          "name": "The Boys",
+          "attackPower": 5,
+          "isLegendary": false,
+          "specialEffect": 2,
+          "fieldPosition": 0
+        },
+        {
+          "name": "Dragon",
+          "attackPower": 8,
+          "isLegendary": false,
+          "specialEffect": 4,
+          "fieldPosition": 0
         }
     ]
 }

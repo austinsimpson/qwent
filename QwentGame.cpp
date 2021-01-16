@@ -22,10 +22,7 @@ QwentGame::QwentGame()
 	setDeck(1, playerDeck);
 
 	_strategies.push_back(QSharedPointer<IQwentStrategy>((IQwentStrategy*)(new NullQwentStrategy())));
-	_strategies.push_back(QSharedPointer<IQwentStrategy>((IQwentStrategy*)(new LearningQwentStrategy(1))));
-	QFile modelFile{":/resources/qwentmodel.ai"};
-	((LearningQwentStrategy*)_strategies[1].data())->loadFromFile(&modelFile);
-	((LearningQwentStrategy*)_strategies[1].data())->setIsLearning(false);
+	_strategies.push_back(QSharedPointer<IQwentStrategy>((IQwentStrategy*)(new BraindeadQwentStrategy(1))));
 
 	for (int index = 0; index < 6; ++index)
 	{
@@ -106,16 +103,22 @@ void QwentGame::playCard
 )
 {
 	const auto& card = _players[playerIndex].hand()[cardIndex];
+	const int otherPlayerIndex = 1 - playerIndex;
+
 	assert(card.toStrongRef()->fieldPosition() == fieldPosition || card.toStrongRef()->fieldPosition() == FieldPosition::Any && playerIndex == currentMatch().currentPlayer());
 	switch (card.toStrongRef()->specialEffect())
 	{
 	case Card::SpecialEffect::Spy:
-		getRow(1 - playerIndex, fieldPosition).addCard(card);
+		getRow(otherPlayerIndex, fieldPosition).addCard(card);
 		_players[playerIndex].addCardsToHand(2);
 		break;
 	case Card::SpecialEffect::Demoralize:
 		getRow(playerIndex, fieldPosition).addCard(card);
-		getRow(1 - playerIndex, fieldPosition).addCard(card);
+		getRow(otherPlayerIndex, fieldPosition).addCard(card);
+		break;
+	case Card::SpecialEffect::Scorch:
+		getRow(playerIndex, fieldPosition).addCard(card);
+		getRow(otherPlayerIndex, fieldPosition).scorch();
 		break;
 	case Card::SpecialEffect::ClearDemoralize:
 		for (auto& row : _rows)

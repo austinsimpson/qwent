@@ -126,6 +126,8 @@ void QwentWindow::on__loadFromFileButton_clicked()
 		QFile modelFile{ fileName };
 		auto* learningStrategy = (LearningQwentStrategy*)_strategies[1].data();
 		learningStrategy->loadFromFile(&modelFile);
+		learningStrategy->setIsLearning(false);
+
 		_game->setStrategy(1, _strategies[1]);
 		_learningRateSpinBox->setValue(learningStrategy->learningRate());
 		_explorationRateSpinBox->setValue(learningStrategy->explorationRate());

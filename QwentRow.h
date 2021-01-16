@@ -16,6 +16,8 @@ public:
 	void addCard(const QWeakPointer<Card>& card);
 	void setFieldPosition(FieldPosition fieldPosition);
 
+	void scorch();
+
 	const QVector<QWeakPointer<Card>>& cards() const;
 	unsigned int effectiveAttackPower(const QWeakPointer<Card>& card) const;
 	FieldPosition fieldPosition() const;

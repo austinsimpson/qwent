@@ -1,6 +1,8 @@
 #include <QtWidgets/QApplication>
 #include "QwentWindow.h"
 
+#include <vector>
+#include <QDebug>
 
 int main(int argc, char *argv[])
 {
