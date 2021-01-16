@@ -75,7 +75,7 @@ unsigned int QwentRow::effectiveAttackPower
 		case Card::SpecialEffect::DoubleAttackOfSameCard:
 		{
 			size_t cardsOfSameType = std::count_if(_cards.cbegin(), _cards.cend(), [card](const QWeakPointer<Card>& other) { return card == other.toStrongRef(); });
-			return (doubled && card->isLegendary() == false ? 2 : 1) * pow(2, cardsOfSameType - 1) * card->attackPower();
+			return (doubled && card->isLegendary() == false ? 2 : 1) * pow(2, cardsOfSameType - 1) * (demoralized == false ? card->attackPower() : 1u);
 		}
 		case Card::SpecialEffect::Demoralize:
 		case Card::SpecialEffect::DoubleAttackEntireRow:
@@ -108,7 +108,7 @@ unsigned int QwentRow::calculateTotalAttackPower() const
 		case Card::SpecialEffect::DoubleAttackOfSameCard:
 		{
 			size_t cardsOfSameType = std::count_if(_cards.cbegin(), _cards.cend(), [card](const QWeakPointer<Card>& other) { return card == other.toStrongRef(); });
-			return runningTotal + ((doubled && card->isLegendary() == false ? 2 : 1) * static_cast<unsigned int>(pow(2, cardsOfSameType - 1)) * card->attackPower());
+			return runningTotal + ((doubled && card->isLegendary() == false ? 2 : 1) * static_cast<unsigned int>(pow(2, cardsOfSameType - 1)) * (demoralized == false ? card->attackPower() : 1u));
 		}
 		case Card::SpecialEffect::Demoralize:
 		case Card::SpecialEffect::DoubleAttackEntireRow:

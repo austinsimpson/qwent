@@ -50,6 +50,25 @@ public:
 		return _qTable;
 	}
 
+	void setLearningRate(double learningRate);
+	double learningRate() const;
+
+	void setExplorationRate(double explorationRate);
+	double explorationRate() const;
+
+	void setDiscountFactor(double discountFactor);
+	double discountFactor() const;
+
+	void setWinReward(double winReward);
+	double winReward() const;
+
+	void setLossPenalty(double lossPenalty);
+	double lossPenalty() const;
+
+	void setCardCount(unsigned int cardCount);
+
+	void setOwningPlayerIndex(unsigned int playerIndex);
+
 private:
 	double getQValue(const MatchSnapshot& matchSnapshot, Action action);
 	void setQValue(const MatchSnapshot& matchSnapshot, Action action, double value);
@@ -63,8 +82,8 @@ private:
 
 	bool _isLearning { true };
 
-	double _discountRate { 0.1 };
-	double _learningRate { 1. };
+	double _discountFactor { 0.1 };
+	double _learningRate { 0.005 };
 	double _explorationRate { 0.1 };
 	double _winReward { 10.0 };
 	double _lossPenalty { -10000.0 };

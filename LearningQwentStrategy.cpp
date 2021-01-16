@@ -16,8 +16,7 @@ LearningQwentStrategy::LearningQwentStrategy
 	size_t owningPlayerIndex
 ):
 	_owningPlayerIndex{ owningPlayerIndex },
-	_rewardFunction(std::bind(&LearningQwentStrategy::winRoundRewardFunction, this, std::placeholders::_1, std::placeholders::_2)),
-	_forfeitActionIndex{ 14 }
+	_rewardFunction(std::bind(&LearningQwentStrategy::winRoundRewardFunction, this, std::placeholders::_1, std::placeholders::_2))
 {
 }
 
@@ -42,10 +41,10 @@ void LearningQwentStrategy::performTurn
 
 	if (_hasLastAction)
 	{
-		double reward = 0; //_rewardFunction(currentSnapshot, _lastSnapshot);
+		double reward = 0;
 		double currentQValue = getQValue(_lastSnapshot, _lastAction);
 		double maximalQValueInCurrentState = std::get<1>(getActionWithMaximalOutcome(currentSnapshot, currentHand));
-		setQValue(_lastSnapshot, _lastAction, (1. - _learningRate) * currentQValue +  _learningRate * (reward + _discountRate * maximalQValueInCurrentState));
+		setQValue(_lastSnapshot, _lastAction, (1. - _learningRate) * currentQValue +  _learningRate * (reward + _discountFactor * maximalQValueInCurrentState));
 	}
 
 	Action nextAction = chooseNextAction(currentSnapshot, currentHand);
@@ -249,6 +248,13 @@ void LearningQwentStrategy::saveToFile
 		QDataStream stream{ioDevice};
 		stream << (int) kFileMagic;
 		stream.setVersion(QDataStream::Qt_5_15);
+
+		stream << _learningRate;
+		stream << _explorationRate;
+		stream << _discountFactor;
+		stream << _winReward;
+		stream << _lossPenalty;
+
 		stream << (int) _forfeitActionIndex;
 
 		for (const auto& [stateAction, qValue] : _qTable)
@@ -289,6 +295,16 @@ void LearningQwentStrategy::loadFromFile
 
 		stream.setVersion(QDataStream::Qt_5_15);
 
+		stream >> _learningRate;
+		stream >> _explorationRate;
+		stream >> _discountFactor;
+		stream >> _winReward;
+		stream >> _lossPenalty;
+
+		int forfeitActionIndex;
+		stream >> forfeitActionIndex;
+		_forfeitActionIndex = forfeitActionIndex;
+	
 		while (stream.atEnd() == false)
 		{
 			int scoreDifference = 0;
@@ -316,4 +332,85 @@ void LearningQwentStrategy::loadFromFile
 
 		ioDevice->close();
 	}
+}
+
+void LearningQwentStrategy::setLearningRate
+(
+	double learningRate
+)
+{
+	_learningRate = learningRate;
+}
+
+double LearningQwentStrategy::learningRate() const
+{
+	return _learningRate;
+}
+
+void LearningQwentStrategy::setExplorationRate
+(
+	double explorationRate
+)
+{
+	_explorationRate = explorationRate;
+}
+
+double LearningQwentStrategy::explorationRate() const
+{
+	return _explorationRate;
+}
+
+void LearningQwentStrategy::setDiscountFactor
+(
+	double discountFactor
+)
+{
+	_discountFactor = discountFactor;
+}
+
+double LearningQwentStrategy::discountFactor() const
+{
+	return _discountFactor;
+}
+
+void LearningQwentStrategy::setWinReward
+(
+	double winReward
+)
+{
+	_winReward = winReward;
+}
+
+double LearningQwentStrategy::winReward() const
+{
+	return _winReward;
+}
+
+void LearningQwentStrategy::setLossPenalty
+(
+	double lossPenalty
+)
+{
+	_lossPenalty = lossPenalty;
+}
+
+double LearningQwentStrategy::lossPenalty() const
+{
+	return _lossPenalty;
+}
+
+void LearningQwentStrategy::setCardCount
+(
+	unsigned int cardCount
+)
+{
+	_forfeitActionIndex = cardCount;
+}
+
+void LearningQwentStrategy::setOwningPlayerIndex
+(
+	unsigned int playerIndex
+)
+{
+	_owningPlayerIndex = playerIndex;
 }

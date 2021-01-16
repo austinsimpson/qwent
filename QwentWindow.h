@@ -2,12 +2,14 @@
 
 #include <QMainWindow>
 #include <QSharedPointer>
+#include <QThread>
 #include "ui_QwentWindow.h"
 
 #include "Card.h"
 #include "QwentGame.h"
 
 class IQwentStrategy;
+class StrategyTrainer;
 
 class QwentWindow : public QMainWindow, public Ui::QwentWindowClass
 {
@@ -15,10 +17,13 @@ class QwentWindow : public QMainWindow, public Ui::QwentWindowClass
 
 public:
     QwentWindow(QWidget* parent = nullptr);
+	~QwentWindow();
 
 private slots:
 	void on__strategyToUseComboBox_currentIndexChanged(int index);
 	void on__loadFromFileButton_clicked();
+
+	void onTrainingFinished();
 
 private:
 	void train();
@@ -30,4 +35,7 @@ private:
 
     QVector<QSharedPointer<Card>> _allCards;
     QSharedPointer<QwentGame> _game;
+
+	QThread _trainingThread;
+	StrategyTrainer* _strategyTrainer;
 };

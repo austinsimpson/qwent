@@ -1,16 +1,6 @@
-#include "QwentWindow.h"
 #include <QtWidgets/QApplication>
+#include "QwentWindow.h"
 
-#include "QwentGame.h"
-#include "LearningQwentStrategy.h"
-
-#include <QStandardPaths>
-#include <QDebug>
-#include <QFile>
-#include <map>
-#include <iostream>
-
-#include <QDir>
 
 int main(int argc, char *argv[])
 {

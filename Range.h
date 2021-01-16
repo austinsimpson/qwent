@@ -24,6 +24,11 @@
 class range
 {
 public:
+    range(size_t end) : _begin{ 0 }, _end{ static_cast<int>(end) }, _currentValue{ 0 }
+    {
+      
+    }
+
     range(int begin, int end)
     {
         this->_begin = begin;

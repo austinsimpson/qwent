@@ -20,3 +20,11 @@ void NullQwentStrategy::notifyGameOver
 {
 	(void) game;
 }
+
+void NullQwentStrategy::setOwningPlayerIndex
+(
+	unsigned int owningPlayerIndex
+)
+{
+	(void)owningPlayerIndex;
+}

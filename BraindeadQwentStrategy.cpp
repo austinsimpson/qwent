@@ -62,3 +62,11 @@ void BraindeadQwentStrategy::notifyGameOver
 {
 	(void) game;
 }
+
+void BraindeadQwentStrategy::setOwningPlayerIndex
+(
+	unsigned int owningPlayerIndex
+)
+{
+	_owningPlayerIndex = owningPlayerIndex;
+}

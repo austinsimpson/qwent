@@ -4,3 +4,6 @@
 
 /.vs/Qwent/v16
 /x64
+/debug/plugins
+/debug
+/release

@@ -89,7 +89,7 @@ unsigned int Match::winningPlayer() const
 	const auto roundsWonByFirst = getRoundsWonByPlayer(0);
 	const auto roundsWonBySecond = getRoundsWonByPlayer(1);
 	if (roundsWonByFirst == roundsWonBySecond)
-		return 3;
+		return 2;
 	else
 	{
 		return roundsWonByFirst > roundsWonBySecond ? 0 : 1;

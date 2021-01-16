@@ -56,6 +56,9 @@
     <ClCompile Include="DeckJsonSerializer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LearningQwentStrategy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Match.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -77,10 +80,10 @@
     <ClCompile Include="QwentWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="StrategyTrainer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LearningQwentStrategy.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -97,7 +100,13 @@
     <ClInclude Include="IQwentStrategy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="LearningQwentStrategy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Match.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MatchSnapshot.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="NullQwentStrategy.h">
@@ -118,9 +127,12 @@
     <CustomBuild Include="QwentWindow.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <ClInclude Include="LearningQwentStrategy.h">
+    <ClInclude Include="Range.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <CustomBuild Include="StrategyTrainer.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="debug\moc_QwentGameWidget.cpp">
@@ -135,16 +147,22 @@
     <ClCompile Include="release\moc_QwentWindow.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
+    <ClCompile Include="debug\moc_StrategyTrainer.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="release\moc_StrategyTrainer.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
     <CustomBuild Include="debug\moc_predefs.h.cbt">
       <Filter>Generated Files</Filter>
     </CustomBuild>
     <CustomBuild Include="release\moc_predefs.h.cbt">
       <Filter>Generated Files</Filter>
     </CustomBuild>
-    <ClCompile Include="debug\qrc_QwentWindow.cpp">
+    <ClCompile Include="debug\qrc_QwentResources.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="release\qrc_QwentWindow.cpp">
+    <ClCompile Include="release\qrc_QwentResources.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
     <ClInclude Include="ui_QwentWindow.h">
@@ -157,7 +175,7 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="QwentWindow.qrc">
+    <CustomBuild Include="QwentResources.qrc">
       <Filter>Resource Files</Filter>
     </CustomBuild>
     <None Include="resources\card-definitions.json">

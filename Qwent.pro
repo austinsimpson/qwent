@@ -17,7 +17,8 @@ HEADERS += ./Card.h \
     ./LearningQwentStrategy.h \
     ./MatchSnapshot.h \
     ./NullQwentStrategy.h \
-    ./Range.h
+    ./Range.h \
+    ./StrategyTrainer.h
 
 SOURCES += ./Card.cpp \
     ./DeckJsonSerializer.cpp \
@@ -30,7 +31,9 @@ SOURCES += ./Card.cpp \
     ./main.cpp \
     ./BraindeadQwentStrategy.cpp \
     ./LearningQwentStrategy.cpp \
-    ./NullQwentStrategy.cpp
+    ./NullQwentStrategy.cpp \
+    ./StrategyTrainer.cpp
+
 FORMS += ./QwentWindow.ui
 RESOURCES += \
     QwentResources.qrc

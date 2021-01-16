@@ -10,6 +10,7 @@ public:
 
 	void performTurn(QwentGame* game) override;
 	void notifyGameOver(QwentGame* game) override;
+	void setOwningPlayerIndex(unsigned int owningPlayerIndex) override;
 
 private:
 	unsigned int _owningPlayerIndex;
