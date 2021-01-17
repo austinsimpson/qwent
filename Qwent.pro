@@ -12,7 +12,7 @@ HEADERS += ./Card.h \
     ./QwentRow.h \
     ./QwentWindow.h \
     ./QwentGameWidget.h \
-    ./BraindeadQwentStrategy.h \
+    ./BasicQwentStrategy.h \
     ./IQwentStrategy.h \
     ./LearningQwentStrategy.h \
     ./MatchSnapshot.h \
@@ -29,7 +29,7 @@ SOURCES += ./Card.cpp \
     ./QwentRow.cpp \
     ./QwentWindow.cpp \
     ./main.cpp \
-    ./BraindeadQwentStrategy.cpp \
+    ./BasicQwentStrategy.cpp \
     ./LearningQwentStrategy.cpp \
     ./NullQwentStrategy.cpp \
     ./StrategyTrainer.cpp

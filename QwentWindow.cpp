@@ -30,6 +30,8 @@ QwentWindow::QwentWindow
 
 	connect(_trainButton, &QPushButton::clicked, this, &QwentWindow::train);
 	connect(_strategyTrainer, &StrategyTrainer::epochFinished, _trainingProgressBar, &QProgressBar::setValue);
+
+	loadFile(":/resources/qwentai_1b_games.ai");
 }
 
 void QwentWindow::on__strategyToUseComboBox_currentIndexChanged
@@ -120,19 +122,27 @@ void QwentWindow::on__loadFromFileButton_clicked()
 	const QString fileName = QFileDialog::getOpenFileName(this, "Choose a model to load", QDir::home().path(), "*.ai");
 	if ((fileName.isNull() || fileName.isEmpty()) == false)
 	{
-		QFile modelFile{ fileName };
-		auto* learningStrategy = (LearningQwentStrategy*)_strategies[1].data();
-		learningStrategy->loadFromFile(&modelFile);
-		learningStrategy->setIsLearning(false);
-		learningStrategy->setOwningPlayerIndex(1);
-
-		_game->setStrategy(1, _strategies[1]);
-		_learningRateSpinBox->setValue(learningStrategy->learningRate());
-		_explorationRateSpinBox->setValue(learningStrategy->explorationRate());
-		_discountRateDoubleSpinBox->setValue(learningStrategy->discountFactor());
-		_winRewardSpinBox->setValue(learningStrategy->winReward());
-		_lossPenaltySpinBox->setValue(learningStrategy->lossPenalty());
+		loadFile(fileName);
 	}
+}
+
+void QwentWindow::loadFile
+(
+	const QString& filePath
+)
+{
+	QFile modelFile{ filePath };
+	auto* learningStrategy = (LearningQwentStrategy*)_strategies[1].data();
+	learningStrategy->loadFromFile(&modelFile);
+	learningStrategy->setIsLearning(false);
+	learningStrategy->setOwningPlayerIndex(1);
+
+	_game->setStrategy(1, _strategies[1]);
+	_learningRateSpinBox->setValue(learningStrategy->learningRate());
+	_explorationRateSpinBox->setValue(learningStrategy->explorationRate());
+	_discountRateDoubleSpinBox->setValue(learningStrategy->discountFactor());
+	_winRewardSpinBox->setValue(learningStrategy->winReward());
+	_lossPenaltySpinBox->setValue(learningStrategy->lossPenalty());
 }
 
 void QwentWindow::train()

@@ -185,4 +185,9 @@
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\qwentai_1b_games.ai">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>

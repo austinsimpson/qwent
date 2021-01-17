@@ -26,6 +26,8 @@ private slots:
 	void onTrainingFinished();
 
 private:
+	void loadFile(const QString& filePath);
+
 	void train();
 
 	void showMachineLearningControls();

@@ -236,8 +236,11 @@ void QwentGameWidget::drawPlayerInfoAndScores
 	const unsigned int roundsLostByOpponent = currentMatch.getRoundsLostByPlayer(1);
 	drawPlayerLivesLeft(painter, opponentRoundsWonIndicatorPosition, circleRadius, roundsLostByOpponent, roundsToWin);
 
-	const QString opponentCardsLeftText = QString::number(_game.toStrongRef()->getHand(1).count());
-	const QPointF cardsRemainingLocation{ _playerInfoWindow.right() - fontMetrics.horizontalAdvance(opponentCardsLeftText), opponentRoundsWonIndicatorPosition.y() - _defaultSpacing - fontMetrics.height() };
+	nameFont.setPointSize(8);
+	painter.setFont(nameFont);
+	fontMetrics = QFontMetrics(nameFont);
+	const QString opponentCardsLeftText = QString("Opponent Cards Left: %1").arg(_game.toStrongRef()->getHand(1).count());
+	const QPointF cardsRemainingLocation{ _playerInfoWindow.right() - fontMetrics.horizontalAdvance(opponentCardsLeftText), _playerInfoWindow.top() + _defaultSpacing + fontMetrics.height() };
 	painter.drawText(cardsRemainingLocation, opponentCardsLeftText);
 
 	QPoint yourRoundsWonIndicatorPosition = QPoint(_playerInfoWindow.right() - circleRadius, yourScoreLocation.y() + circleRadius + 5);
