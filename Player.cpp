@@ -61,5 +61,6 @@ void Player::generateRandomHand(unsigned int handSize)
 	{
 		_hand.append(_deck[i]);
 	}
+
 	_nextCardInDeckIndex = handSize;
 }

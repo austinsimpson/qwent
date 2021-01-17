@@ -53,6 +53,8 @@ void LearningQwentStrategy::performTurn
 	_hasLastAction = true;
 	_lastSnapshot = currentSnapshot;
 
+	
+
 	if (nextAction.actionIndex < _forfeitActionIndex)
 	{
 		const auto findCardLambda = [nextAction](const QWeakPointer<Card>& card)
@@ -61,6 +63,7 @@ void LearningQwentStrategy::performTurn
 		};
 
 		const auto& cardIterator = std::find_if(currentHand.cbegin(), currentHand.cend(), findCardLambda);
+		//qDebug() << "Playing card:" << (*cardIterator).toStrongRef()->name();
 		size_t cardIndexInHand = cardIterator - currentHand.cbegin();
 		game->playCard(_owningPlayerIndex, cardIndexInHand, nextAction.fieldPosition);
 	}
@@ -262,6 +265,8 @@ void LearningQwentStrategy::saveToFile
 			stream << stateAction.snapshot.scoreDifference;
 			stream << stateAction.snapshot.firstPlayerAboutToWin;
 			stream << stateAction.snapshot.secondPlayerAboutToWin;
+			stream << stateAction.snapshot.firstPlayerHandCount;
+			stream << stateAction.snapshot.secondPlayerHandCount;
 			stream << stateAction.snapshot.isCloseCombatDemoralized;
 			stream << stateAction.snapshot.isRangedRowDemoralized;
 			stream << stateAction.snapshot.isSeigeRowDemoralized;
@@ -311,13 +316,16 @@ void LearningQwentStrategy::loadFromFile
 
 			StateAction stateAction{};
 			stream >> scoreDifference;
+			stateAction.snapshot.scoreDifference = scoreDifference;
+			
 			stream >> stateAction.snapshot.firstPlayerAboutToWin;
 			stream >> stateAction.snapshot.secondPlayerAboutToWin;
+			stream >> stateAction.snapshot.firstPlayerHandCount;
+			stream >> stateAction.snapshot.secondPlayerHandCount;
 			stream >> stateAction.snapshot.isCloseCombatDemoralized;
 			stream >> stateAction.snapshot.isRangedRowDemoralized;
 			stream >> stateAction.snapshot.isSeigeRowDemoralized;
 
-			stateAction.snapshot.scoreDifference = scoreDifference;
 
 			unsigned int actionIndex = 0;
 			stream >> actionIndex;

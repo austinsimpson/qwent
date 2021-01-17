@@ -7,6 +7,8 @@
 #include "QwentGame.h"
 #include "QwentRow.h"
 
+#include <functional>
+
 class QwentGameWidget : public QWidget
 {
 	Q_OBJECT
@@ -40,7 +42,9 @@ private:
 
 	void drawPlayerHand(QPainter& painter, const QVector<QWeakPointer<Card>>& cards);
 
-	void drawEndTurnButton(QPainter& painter);
+	void drawButton(QPainter& painter, const QRectF& rect, const QString& text);
+
+	void drawPostGameSummary(QPainter& painter);
 
 	const QRectF getRowGeometry(unsigned int rowIndex) const;
 
@@ -63,7 +67,7 @@ private:
 	const qreal _endTurnButtonWidth { 100. };
 	const qreal _endTurnButtonHeight { 40. };
 
-	const qreal _startGameButtonWidth{ 100. };
+	const qreal _startGameButtonWidth{ 160. };
 	const qreal _startGameButtonHeight{ 40. };
 
 	QRectF _playerInfoWindow;
@@ -71,6 +75,7 @@ private:
 	QRectF _playerHandWindow;
 
 	QRectF _endTurnButtonRect;
+	QRectF _startGameButtonRect;
 
 	unsigned int _pendingCardIndex{0};
 };

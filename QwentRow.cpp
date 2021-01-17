@@ -80,6 +80,7 @@ void QwentRow::scorch()
 		});
 
 		_cards.removeAll(card);
+		recomputeCachedProperties();
 	}
 }
 

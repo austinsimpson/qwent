@@ -9,7 +9,8 @@ struct MatchSnapshot
 	int scoreDifference;
 	bool firstPlayerAboutToWin;
 	bool secondPlayerAboutToWin;
-	//size_t secondPlayerCardCount;
+	int firstPlayerHandCount;
+	int secondPlayerHandCount;
 	bool isCloseCombatDemoralized;
 	bool isRangedRowDemoralized;
 	bool isSeigeRowDemoralized;
@@ -32,6 +33,18 @@ struct MatchSnapshot
 		}
 
 		result = secondPlayerAboutToWin <=> other.secondPlayerAboutToWin;
+		if (result != 0)
+		{
+			return result;
+		}
+
+		result = firstPlayerHandCount <=> other.firstPlayerHandCount;
+		if (result != 0)
+		{
+			return result;
+		}
+
+		result = secondPlayerHandCount <=> other.secondPlayerHandCount;
 		if (result != 0)
 		{
 			return result;

@@ -51,8 +51,6 @@ void QwentWindow::on__strategyToUseComboBox_currentIndexChanged
 	default:
 		break;
 	}
-
-	_game->startMatch();
 }
 
 void QwentWindow::showMachineLearningControls()
@@ -126,6 +124,7 @@ void QwentWindow::on__loadFromFileButton_clicked()
 		auto* learningStrategy = (LearningQwentStrategy*)_strategies[1].data();
 		learningStrategy->loadFromFile(&modelFile);
 		learningStrategy->setIsLearning(false);
+		learningStrategy->setOwningPlayerIndex(1);
 
 		_game->setStrategy(1, _strategies[1]);
 		_learningRateSpinBox->setValue(learningStrategy->learningRate());

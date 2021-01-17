@@ -178,6 +178,8 @@ MatchSnapshot QwentGame::takeSnapshot() const
 	result.scoreDifference = getPlayerScore(0) - getPlayerScore(1);
 	result.firstPlayerAboutToWin = currentMatch().getRoundsWonByPlayer(0) > 0;
 	result.secondPlayerAboutToWin = currentMatch().getRoundsWonByPlayer(1) > 0;
+	result.firstPlayerHandCount = getHand(0).size();
+	result.secondPlayerHandCount = getHand(1).size();
 	result.isCloseCombatDemoralized = getRow(0, FieldPosition::CloseCombat).isDemoralized(); //We can choose either player index because of symmetry
 	result.isRangedRowDemoralized = getRow(0, FieldPosition::Ranged).isDemoralized(); //We can choose either player index because of symmetry
 	result.isSeigeRowDemoralized = getRow(0, FieldPosition::Siege).isDemoralized(); //We can choose either player index because of symmetry

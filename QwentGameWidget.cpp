@@ -33,8 +33,16 @@ void QwentGameWidget::paintEvent
 		drawPlayerInfoAndScores(painter);
 		drawPlayerHand(painter, _game.toStrongRef()->getHand(0));
 
-		drawEndTurnButton(painter);
+		drawButton(painter, _endTurnButtonRect, "End Turn");
 		break;
+	case QwentGame::GameState::PreGame:
+		drawButton(painter, _startGameButtonRect, "Start Game");
+		break;
+	case QwentGame::GameState::EndGame:
+		drawButton(painter, _startGameButtonRect, "Play Again");
+		drawPostGameSummary(painter);
+		break;
+
 	}
 	painter.end();
 }
@@ -48,9 +56,13 @@ void QwentGameWidget::resizeEvent
 	_playerInfoWindow = QRectF(0, 0, width() * _playerInfoRelativeWidth, height() * _playerInfoRelativeHeight);
 	_playerHandWindow = QRectF(width() * _playerInfoRelativeWidth + _defaultSpacing, height() * _rowsRelativeHeight, width() * _playerHandRelativeWidth - (2. *_defaultSpacing), height() * _playerHandRelativeHeight);
 
-	const qreal buttonLeft = _playerHandWindow.left() - _endTurnButtonWidth - (2 * _defaultSpacing);
-	const qreal buttonTop = _playerHandWindow.bottom() - _endTurnButtonHeight;
-	_endTurnButtonRect = QRectF(buttonLeft, buttonTop, _endTurnButtonWidth, _endTurnButtonHeight);
+	const qreal endTurnButtonLeft = _playerHandWindow.left() - _endTurnButtonWidth - (2 * _defaultSpacing);
+	const qreal endTurnButtonTop = _playerHandWindow.bottom() - _endTurnButtonHeight;
+	_endTurnButtonRect = QRectF(endTurnButtonLeft, endTurnButtonTop, _endTurnButtonWidth, _endTurnButtonHeight);
+
+	const qreal startGameButtonLeft = (width() - _startGameButtonWidth) / 2;
+	const qreal startGameButtonTop = (height() - _endTurnButtonHeight) / 2;
+	_startGameButtonRect = QRectF(startGameButtonLeft, startGameButtonTop, _startGameButtonWidth, _startGameButtonHeight);
 }
 
 void QwentGameWidget::setGame
@@ -146,6 +158,48 @@ void QwentGameWidget::drawCard
 	painter.fillRect(cardRect, cardContainsMouse ? baseColor.darker() : baseColor);
 	painter.drawText(QPoint(cardRect.left() + textMargins, cardRect.top() + fontHeight), card.name());
 	painter.drawText(QPoint(cardRect.left() + cardRect.width() - textMargins - attackPowerStringWidth, cardRect.top() + fontHeight), attackPowerString);
+
+	const auto fieldPositionToText = [](FieldPosition fieldPosition) {
+		switch (fieldPosition)
+		{
+		case FieldPosition::CloseCombat:
+			return QString("CC");
+		case FieldPosition::Ranged:
+			return QString("R");
+		case FieldPosition::Siege:
+			return QString("S");
+		case FieldPosition::Every:
+			return QString("Every");
+		case FieldPosition::Any:
+			return QString("Any");
+		}
+	};
+
+	const QString fieldPositionText = fieldPositionToText(card.fieldPosition());
+	painter.drawText(cardRect.left() + textMargins, cardRect.bottom() - fontHeight, fieldPositionText);
+
+	const auto specialAbilityToText = [](Card::SpecialEffect effect)
+	{
+		switch (effect)
+		{
+		case Card::SpecialEffect::DoubleAttackEntireRow:
+			return QString("2x");
+		case Card::SpecialEffect::DoubleAttackOfSameCard:
+			return QString("Reinforce");
+		case Card::SpecialEffect::Scorch:
+			return QString("Scorch");
+		case Card::SpecialEffect::Demoralize:
+			return QString("Debuff");
+		case Card::SpecialEffect::ClearDemoralize:
+			return QString("Clear Debuff");
+		default:
+			return QString();
+		}
+	};
+
+	const QString specialEffectText = specialAbilityToText(card.specialEffect());
+	painter.drawText(cardRect.right() - textMargins - fontMetrics.horizontalAdvance(specialEffectText), cardRect.bottom() - fontHeight, specialEffectText);
+
 }
 
 void QwentGameWidget::drawPlayerInfoAndScores
@@ -181,6 +235,10 @@ void QwentGameWidget::drawPlayerInfoAndScores
 	QPoint opponentRoundsWonIndicatorPosition = QPoint(_playerInfoWindow.right() - circleRadius, opponentScoreLocation.y() - fontMetrics.height() - circleRadius - 5);
 	const unsigned int roundsLostByOpponent = currentMatch.getRoundsLostByPlayer(1);
 	drawPlayerLivesLeft(painter, opponentRoundsWonIndicatorPosition, circleRadius, roundsLostByOpponent, roundsToWin);
+
+	const QString opponentCardsLeftText = QString::number(_game.toStrongRef()->getHand(1).count());
+	const QPointF cardsRemainingLocation{ _playerInfoWindow.right() - fontMetrics.horizontalAdvance(opponentCardsLeftText), opponentRoundsWonIndicatorPosition.y() - _defaultSpacing - fontMetrics.height() };
+	painter.drawText(cardsRemainingLocation, opponentCardsLeftText);
 
 	QPoint yourRoundsWonIndicatorPosition = QPoint(_playerInfoWindow.right() - circleRadius, yourScoreLocation.y() + circleRadius + 5);
 	const unsigned int roundsLostByYou = currentMatch.getRoundsLostByPlayer(0);
@@ -263,63 +321,74 @@ void QwentGameWidget::mouseReleaseEvent
 {
 	if (mouseEvent->button() == Qt::MouseButton::LeftButton)
 	{
-		switch (_mouseSelectionMode)
+		switch (_game.toStrongRef()->getState())
 		{
-			case QwentGameWidget::MouseSelectionMode::SelectCard:
+		case QwentGame::GameState::GameInProgress:
+			switch (_mouseSelectionMode)
 			{
-				const unsigned int handSize = _game.toStrongRef()->getHand(0).size();
-				if (handSize == 0)
-					return;
-
-				const int left = this->_playerInfoRelativeWidth * width();
-				const int top = 0.8 * height();
-
-				const int playerHandWidth = _playerHandRelativeWidth * width();
-				const int playerHandHeight = _playerHandRelativeHeight * height();
-
-				const int cardWidth = (playerHandWidth / _game.toStrongRef()->getHand(0).size()) - cardSpacing;
-				const int cardIndex = (mouseEvent->pos().x() - left) / (cardWidth + cardSpacing);
-
-				if (0 <= cardIndex && cardIndex < handSize)
+				case QwentGameWidget::MouseSelectionMode::SelectCard:
 				{
-					const auto& selectedCard = _game.toStrongRef()->getHand(0)[cardIndex];
+					const unsigned int handSize = _game.toStrongRef()->getHand(0).size();
+					if (handSize == 0)
+						return;
 
-					const QRect selectedCardGeomerty(left + ((cardWidth + cardSpacing) * cardIndex), top, cardWidth, playerHandHeight);
-					const auto mousePos = mouseEvent->pos();
-					if (selectedCardGeomerty.contains(mousePos))
-					{
-						if (selectedCard.toStrongRef()->fieldPosition() != FieldPosition::Any || selectedCard.toStrongRef()->specialEffect() == Card::SpecialEffect::ClearDemoralize)
-						{
-							_game.toStrongRef()->playCard(0, cardIndex);
-						}
-						else
-						{
-							_pendingCardIndex = cardIndex;
-							_mouseSelectionMode = QwentGameWidget::MouseSelectionMode::SelectRow;
-						}
-					}
-				}
-			}
-			break;
+					const int left = this->_playerInfoRelativeWidth * width();
+					const int top = _playerInfoRelativeHeight * height();
 
-			case QwentGameWidget::MouseSelectionMode::SelectRow:
-			{
-				for (unsigned int rowIndex = 0; rowIndex < 6; ++rowIndex)
-				{
-					const QRectF rowGeometry = getRowGeometry(rowIndex);
-					if (rowGeometry.contains(mouseEvent->pos()) && rowIndex < 3)
+					const int playerHandWidth = _playerHandRelativeWidth * width();
+					const int playerHandHeight = _playerHandRelativeHeight * height();
+
+					const int cardWidth = (playerHandWidth / _game.toStrongRef()->getHand(0).size()) - cardSpacing;
+					const int cardIndex = (mouseEvent->pos().x() - left) / (cardWidth + cardSpacing);
+
+					if (0 <= cardIndex && cardIndex < handSize)
 					{
-						_game.toStrongRef()->playCard(0, _pendingCardIndex, (FieldPosition)rowIndex);
-						_mouseSelectionMode = MouseSelectionMode::SelectCard;
+						const auto& selectedCard = _game.toStrongRef()->getHand(0)[cardIndex];
+
+						const QRect selectedCardGeomerty(left + ((cardWidth + cardSpacing) * cardIndex), top, cardWidth, playerHandHeight);
+						const auto mousePos = mouseEvent->pos();
+						if (selectedCardGeomerty.contains(mousePos))
+						{
+							if (selectedCard.toStrongRef()->fieldPosition() != FieldPosition::Any || selectedCard.toStrongRef()->specialEffect() == Card::SpecialEffect::ClearDemoralize)
+							{
+								_game.toStrongRef()->playCard(0, cardIndex);
+							}
+							else
+							{
+								_pendingCardIndex = cardIndex;
+								_mouseSelectionMode = QwentGameWidget::MouseSelectionMode::SelectRow;
+							}
+						}
 					}
 				}
 				break;
-			}
-		}
 
-		if (_endTurnButtonRect.contains(_lastMousePosition))
-		{
-			_game.toStrongRef()->endTurn(true);
+				case QwentGameWidget::MouseSelectionMode::SelectRow:
+				{
+					for (unsigned int rowIndex = 0; rowIndex < 6; ++rowIndex)
+					{
+						const QRectF rowGeometry = getRowGeometry(rowIndex);
+						if (rowGeometry.contains(mouseEvent->pos()) && rowIndex < 3)
+						{
+							_game.toStrongRef()->playCard(0, _pendingCardIndex, (FieldPosition)rowIndex);
+							_mouseSelectionMode = MouseSelectionMode::SelectCard;
+						}
+					}
+					break;
+				}
+				}
+
+				if (_endTurnButtonRect.contains(_lastMousePosition))
+				{
+					_game.toStrongRef()->endTurn(true);
+				}
+		case QwentGame::GameState::PreGame:
+		case QwentGame::GameState::EndGame:
+			if (_startGameButtonRect.contains(_lastMousePosition))
+			{
+				_game.toStrongRef()->startMatch();
+			}
+			break;
 		}
 
 		update();
@@ -358,23 +427,42 @@ const QRectF QwentGameWidget::getRowGeometry
 	return QRectF(_rowsWindow.left() + _defaultSpacing, rowTop, _rowsWindow.width() - (2. * _defaultSpacing), rowHeight);
 }
 
-void QwentGameWidget::drawEndTurnButton
+void QwentGameWidget::drawButton
 (
-	QPainter& painter
+	QPainter& painter,
+	const QRectF& bounds,
+	const QString& text
 )
 {
-	painter.setBrush(_endTurnButtonRect.contains(_lastMousePosition) ? QColor(0, 0, 0, 126) : QColor(0, 0, 0, 0));
-	painter.drawRect(_endTurnButtonRect);
+	painter.setBrush(bounds.contains(_lastMousePosition) ? QColor(0, 0, 0, 126) : QColor(0, 0, 0, 0));
+	painter.drawRect(bounds);
 
 	auto font = painter.font();
 	font.setPointSizeF(12.);
 	painter.setFont(font);
 
-	const QString buttonText = "End Turn";
-
 	QFontMetrics metrics(font);
-	const auto halfFontWidth = metrics.horizontalAdvance(buttonText) / 2.;
+	const auto halfFontWidth = metrics.horizontalAdvance(text) / 2.;
 	const auto halfFontHeight = metrics.capHeight() / 2.;
 
-	painter.drawText(QPointF{ _endTurnButtonRect.left() + (_endTurnButtonWidth / 2.) - halfFontWidth, _endTurnButtonRect.top() + (_endTurnButtonHeight / 2.) + halfFontHeight }, buttonText);
+	painter.drawText(QPointF{ bounds.center().x() - halfFontWidth, bounds.top() + (bounds.height() / 2.) + halfFontHeight }, text);
+}
+
+void QwentGameWidget::drawPostGameSummary
+(
+	QPainter& painter
+)
+{
+	const auto& game = _game.toStrongRef();
+	bool didWin = game->winningPlayer() == 0;
+	unsigned int playerScore = game->getPlayerScore(0);
+	unsigned int aiScore = game->getPlayerScore(1);
+
+	const QString roundText = QString(didWin ? "You won." : "You lost.");
+
+	QFontMetrics fontMetrics(painter.font());
+	const auto fontHalfWidth = fontMetrics.horizontalAdvance(roundText) / 2.;
+	const auto fontHeight = fontMetrics.capHeight();
+
+	painter.drawText(QPointF{ (width() / 2.) - fontHalfWidth, (height() / 2.) - _startGameButtonHeight + fontHeight }, roundText);
 }
