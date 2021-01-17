@@ -1,6 +1,6 @@
 #include "DeckJsonSerializer.h"
 #include "NullQwentStrategy.h"
-#include "BraindeadQwentStrategy.h"
+#include "BasicQwentStrategy.h"
 #include "LearningQwentStrategy.h"
 #include "QwentGame.h"
 #include "MatchSnapshot.h"
@@ -22,7 +22,7 @@ QwentGame::QwentGame()
 	setDeck(1, playerDeck);
 
 	_strategies.push_back(QSharedPointer<IQwentStrategy>((IQwentStrategy*)(new NullQwentStrategy())));
-	_strategies.push_back(QSharedPointer<IQwentStrategy>((IQwentStrategy*)(new BraindeadQwentStrategy(1))));
+	_strategies.push_back(QSharedPointer<IQwentStrategy>((IQwentStrategy*)(new BasicQwentStrategy(1))));
 
 	for (int index = 0; index < 6; ++index)
 	{
@@ -34,6 +34,7 @@ QwentGame::QwentGame()
 void QwentGame::startMatch()
 {
 	_currentMatch.clear();
+	_gameState = QwentGame::GameState::GameInProgress;
 	for (auto& player : _players)
 	{
 		player.generateRandomHand(10);
@@ -76,6 +77,7 @@ void QwentGame::endTurn
 			{
 				strategy->notifyGameOver(this);
 			}
+			_gameState = QwentGame::GameState::EndGame;
 		}
 	}
 	else
@@ -244,4 +246,9 @@ void QwentGame::setStrategy
 )
 {
 	_strategies[playerIndex] = strategy;
+}
+
+QwentGame::GameState QwentGame::getState() const
+{
+	return _gameState;
 }

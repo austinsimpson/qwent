@@ -3,10 +3,10 @@
 
 #include "IQwentStrategy.h"
 
-class BraindeadQwentStrategy : IQwentStrategy
+class BasicQwentStrategy : IQwentStrategy
 {
 public:
-	BraindeadQwentStrategy(unsigned int owningPlayerIndex);
+	BasicQwentStrategy(unsigned int owningPlayerIndex);
 
 	void performTurn(QwentGame* game) override;
 	void notifyGameOver(QwentGame* game) override;

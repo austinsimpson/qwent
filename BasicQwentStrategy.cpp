@@ -1,8 +1,8 @@
-#include "BraindeadQwentStrategy.h"
+#include "BasicQwentStrategy.h"
 
 #include "QwentGame.h"
 
-BraindeadQwentStrategy::BraindeadQwentStrategy
+BasicQwentStrategy::BasicQwentStrategy
 (
 	unsigned int owningPlayerIndex
 ):
@@ -11,7 +11,7 @@ BraindeadQwentStrategy::BraindeadQwentStrategy
 
 }
 
-void BraindeadQwentStrategy::performTurn
+void BasicQwentStrategy::performTurn
 (
 	QwentGame* game
 )
@@ -55,7 +55,7 @@ void BraindeadQwentStrategy::performTurn
 	}
 }
 
-void BraindeadQwentStrategy::notifyGameOver
+void BasicQwentStrategy::notifyGameOver
 (
 	QwentGame* game
 )
@@ -63,7 +63,7 @@ void BraindeadQwentStrategy::notifyGameOver
 	(void) game;
 }
 
-void BraindeadQwentStrategy::setOwningPlayerIndex
+void BasicQwentStrategy::setOwningPlayerIndex
 (
 	unsigned int owningPlayerIndex
 )

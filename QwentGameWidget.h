@@ -63,6 +63,9 @@ private:
 	const qreal _endTurnButtonWidth { 100. };
 	const qreal _endTurnButtonHeight { 40. };
 
+	const qreal _startGameButtonWidth{ 100. };
+	const qreal _startGameButtonHeight{ 40. };
+
 	QRectF _playerInfoWindow;
 	QRectF _rowsWindow;
 	QRectF _playerHandWindow;

@@ -45,7 +45,9 @@ public:
 	QSharedPointer<IQwentStrategy> getStrategy(int playerIndex);
 	void setStrategy(int playerIndex, const QSharedPointer<IQwentStrategy>& strategy);
 
-	enum GameState { PreGame, GameInProgress } _gameState;
+	enum class GameState { PreGame, GameInProgress, EndGame };
+	GameState getState() const;
+
 
 private:
 	unsigned int rowIndex(unsigned int playerIndex, FieldPosition rowType) const;
@@ -55,5 +57,7 @@ private:
 	QVector<Player> _players;
 	QVector<QSharedPointer<IQwentStrategy>> _strategies;
 	QVector<QSharedPointer<Card>> _allCards;
+
+	GameState _gameState{ GameState::PreGame };
 };
 

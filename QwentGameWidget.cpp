@@ -26,11 +26,16 @@ void QwentGameWidget::paintEvent
 	QPainter painter;
 	painter.begin(this);
 
-	drawRows(painter, _game.toStrongRef()->rows());
-	drawPlayerInfoAndScores(painter);
-	drawPlayerHand(painter, _game.toStrongRef()->getHand(0));
+	switch (_game.toStrongRef()->getState())
+	{
+	case QwentGame::GameState::GameInProgress:
+		drawRows(painter, _game.toStrongRef()->rows());
+		drawPlayerInfoAndScores(painter);
+		drawPlayerHand(painter, _game.toStrongRef()->getHand(0));
 
-	drawEndTurnButton(painter);
+		drawEndTurnButton(painter);
+		break;
+	}
 	painter.end();
 }
 

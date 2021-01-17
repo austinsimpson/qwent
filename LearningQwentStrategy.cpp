@@ -39,7 +39,7 @@ void LearningQwentStrategy::performTurn
 	MatchSnapshot currentSnapshot = bucketizeSnapshot(game->takeSnapshot());
 	const QVector<QWeakPointer<Card>>& currentHand = game->getHand(_owningPlayerIndex);
 
-	if (_hasLastAction)
+	if (_hasLastAction && _isLearning)
 	{
 		double reward = 0;
 		double currentQValue = getQValue(_lastSnapshot, _lastAction);

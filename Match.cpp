@@ -1,5 +1,7 @@
 #include "Match.h"
 
+#include <ctime>
+
 Match::Match()
 {
 	clear();
@@ -7,6 +9,7 @@ Match::Match()
 
 void Match::clear()
 {
+	srand(time(0));
 	_currentPlayerIndex = rand() % 2;
 	_rounds.clear();
 	for (int i = 0; i < _numberOfRounds; ++i)

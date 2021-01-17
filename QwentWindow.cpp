@@ -1,6 +1,6 @@
 #include "QwentWindow.h"
 
-#include "BraindeadQwentStrategy.h"
+#include "BasicQwentStrategy.h"
 #include "DeckJsonSerializer.h"
 #include "LearningQwentStrategy.h"
 #include "StrategyTrainer.h"
@@ -15,13 +15,12 @@ QwentWindow::QwentWindow
     QMainWindow(parent),
     _game(new QwentGame)
 {
-	_strategies.push_back(QSharedPointer<IQwentStrategy>((IQwentStrategy*)new BraindeadQwentStrategy{0}));
+	_strategies.push_back(QSharedPointer<IQwentStrategy>((IQwentStrategy*)new BasicQwentStrategy{0}));
 	_strategies.push_back(QSharedPointer<IQwentStrategy>((IQwentStrategy*)new LearningQwentStrategy{0}));
 
     setupUi(this);
 	hideMachineLearningControls();
     _qwentGameWidget->setGame(_game);
-    _game->startMatch();
 
 	_strategyTrainer = new StrategyTrainer();
 	_strategyTrainer->moveToThread(&_trainingThread);
@@ -134,7 +133,6 @@ void QwentWindow::on__loadFromFileButton_clicked()
 		_discountRateDoubleSpinBox->setValue(learningStrategy->discountFactor());
 		_winRewardSpinBox->setValue(learningStrategy->winReward());
 		_lossPenaltySpinBox->setValue(learningStrategy->lossPenalty());
-		_game->startMatch();
 	}
 }
 
@@ -175,5 +173,4 @@ void QwentWindow::onTrainingFinished()
 	}
 
 	_game->setStrategy(1, strategy);
-	_game->startMatch();
 }
